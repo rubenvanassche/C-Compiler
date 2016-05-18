@@ -14,7 +14,5 @@ antlr4 = java -jar /usr/local/lib/antlr-4.5.3-complete.jar
 
 # Generate the ANTLR grammer
 generate:
-	$(antlr4) -Dlanguage=Python3 C.g4 -o src/ANTLR/
+	$(antlr4) -Dlanguage=Python3 C.g4 -o src/
 
-clean:
-	rm src/ANTLR/*

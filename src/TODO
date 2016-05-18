@@ -1,0 +1,4 @@
+- Multivars
+- Betere serialization
+- ParametersList bij call moeten types van de argumenten gecheckt worden
+- Bij ASTBuild Variable definition, bij een alias wordt de symboltable aangeroepen maar deze is leeg tot de compilatiefase

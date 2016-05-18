@@ -1,8 +1,16 @@
-from Expression import Expression
+from src.AST.Expression import Expression
 
 class AmpersandExpression(Expression):
+    """Node For AmpersandExpression in AST"""
     def __init__(self, expression):
+        Expression.__init__(self)
         self.expression = expression
 
     def __str__(self):
-        return "AmpersandExpression"
+        return "Ampersand(" + str(self.expression) + ")"
+
+    def serialize(self, level):
+        return "ampersand(" + self.expression.serialize(0) + ")"
+
+    def compile(self):
+        return "ldc a"

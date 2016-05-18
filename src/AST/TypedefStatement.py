@@ -1,13 +1,18 @@
-from Statement import Statement
+from src.AST.Statement import Statement
 
 class TypedefStatement(Statement):
+    """Node For TypedefStatement in AST"""
 
-    def __init__(self, basetype, alias):
+    def __init__(self, basetype, identifier):
+        Statement.__init__(self)
         self.basetype = basetype
-        self.alias = alias
+        self.identifier = identifier
 
     def __str__(self):
-        return "TypedefStatement"
+        return "Typedef " + str(self.basetype) + " -> " + str(self.identifier) + "\n"
 
     def compile(self):
-        return ""
+        self.sym.registerAlias(self.identifier, self.basetype)
+
+    def serialize(self, level):
+        return "Typedef " + self.basetype.serialize(0) + " -> " + str(self.identifier) + "\n"

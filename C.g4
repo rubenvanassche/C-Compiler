@@ -1,10 +1,6 @@
 grammar C;
 
 
-@header {
-package c2p.c;
-}
-
 
 /**
  * A C program consist of a sequence of statements in which they are ended with
@@ -36,6 +32,7 @@ statement
 | BREAK SEMICOLON
 | CONTINUE SEMICOLON
 | INCLUDE (CPATH|STRING)
+| RETURN expression
 | expression SEMICOLON
 | LBRACE statement* RBRACE
 | WHILE LPAREN expression RPAREN statement
@@ -72,7 +69,8 @@ expression
 | expression LSQUAREBRACKET expression RSQUAREBRACKET
 | IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN
 | expression (LSQUAREBRACKET expression RSQUAREBRACKET)
-| variable (COMMA STAR* IDENTIFIER (LSQUAREBRACKET NUM RSQUAREBRACKET)*)* (ASSIGN expression)?
+| variable (COMMA STAR* IDENTIFIER (LSQUAREBRACKET NUM RSQUAREBRACKET)*)* ((PLUS|MINUS)? ASSIGN expression)?
+| variable (PLUS PLUS|MINUS MINUS)
 ;
 
 variable
@@ -168,9 +166,9 @@ IDENTIFIER: ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*;
 
 // Skip comments (as they are not a part of the AST). Also ignore whitespaces
 // and newlines.
-COMMENT: BEGININLINECOMMENT .*? NEWLINE { skip(); }
-       | BEGINCOMMENT .*? ENDCOMMENT { skip(); }
+COMMENT: (BEGININLINECOMMENT .*? NEWLINE
+       | BEGINCOMMENT .*? ENDCOMMENT)  -> skip
        ;
 
-WHITESPACE: (' '|'\t')+ { skip(); };
-NEWLINE: '\r'? '\n' { skip(); };
+WHITESPACE: (' '|'\t')+ -> skip;
+NEWLINE: '\r'? '\n'  -> skip;
