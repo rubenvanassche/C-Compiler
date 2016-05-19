@@ -10,7 +10,7 @@ class PrimitiveType(Type):
     def __eq__(self, other):
         """Check if 2 types are the same"""
         if(not isinstance(other, PrimitiveType)):
-            return false
+            return False
         else:
             return self.code == other.code
 

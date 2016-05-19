@@ -6,7 +6,7 @@ class ArrayType(Type):
     # basetype: type and size:int
     def __init__(self, basetype, size):
         totalSize = '0' if basetype == None else size*basetype.getSize()
-        super(Type, self).__init__(totalSize)
+        Type.__init__(self, totalSize)
 
         self.basetype = basetype
         self.size = size

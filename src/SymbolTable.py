@@ -1,4 +1,5 @@
 from src.Type.IntegerType import IntegerType
+from src.Exceptions.SymbolTable import *
 
 class Singleton(object):
     """Utility for creating Singletons"""
@@ -124,17 +125,17 @@ class SymbolTable(Singleton):
     def closeScope(self):
         """Close Scope"""
         if(len(self.scopes) == 1):
-            raise RuntimeError("No scope opened previously")
+            raise ScopeError("No scope opened previously")
 
         self.scopes.pop()
 
     def registerSymbol(self, identifier, basetype):
         """Register a Symbol in the current scope with an identifier(string) and basetype(Type)"""
         if(self.scopes[-1].isContainingSymbol(identifier)):
-            raise RuntimeError("Symbol '"+ identifier +"' already registered in scope")
+            raise SymbolAlreadyRegisteredError("Symbol '"+ identifier +"' already registered in scope")
 
         if(basetype.getSize() == 0):
-            raise RuntimeError("Type should have a size greater then 0")
+            raise TypeError("Type should have a size greater then 0")
 
         symbol = Symbol(identifier, basetype, self.scopes[-1].getAllocated())
         self.scopes[-1].addSymbol(symbol)
@@ -145,14 +146,14 @@ class SymbolTable(Singleton):
     def registerAlias(self, identifier, basetype):
         """Register an Alias in the current scope with an identifier(string) and basetype(Type)"""
         if(self.scopes[-1].isContainingAlias(identifier)):
-            raise RuntimeError("Alias '"+ identifier +"' already registered in scope")
+            raise AliasAlreadyRegisteredError("Alias '"+ identifier +"' already registered in scope")
 
         self.scopes[-1].addAlias(Alias(identifier, basetype))
 
     def registerFunction(self, identifier, returntype, parameters, address):
         """Register a Function in the current scope with an identifier(string), returntype(Type), paramters(ParametersList) and address(int)"""
         if(self.scopes[-1].isContainingFunction(identifier, parameters)):
-            raise RuntimeError("Function '"+ identifier +"' already registered in scope")
+            raise FunctionAlreadyRegisteredError("Function '"+ identifier +"' already registered in scope")
 
         self.scopes[-1].addFunction(Function(identifier, returntype, parameters, address))
 
@@ -169,7 +170,7 @@ class SymbolTable(Singleton):
             if(symbol != None):
                 return symbol
 
-        raise RuntimeError("Symbol '"+ identifier +"' not registered")
+        raise SymbolNotRegisteredError("Symbol '"+ identifier +"' not registered")
 
     def getAlias(self, identifier):
         """Get an alias from the Symbol Table with an identifier(string)"""
@@ -179,7 +180,7 @@ class SymbolTable(Singleton):
             if(alias != None):
                 return alias
 
-        raise RuntimeError("Alias '"+ identifier +"' not registered")
+        raise AliasNotRegisteredError("Alias '"+ identifier +"' not registered")
 
     # Parameters is [] and not ParametersList
     def getFunction(self, identifier, parameters):
@@ -190,7 +191,7 @@ class SymbolTable(Singleton):
             if(function != None):
                 return function
 
-        raise RuntimeError("Function '"+ identifier +"' not registered")
+        raise FunctionNotRegisteredError("Function '"+ identifier +"' not registered")
 
     def openLoop(self):
         """Open a loop"""
@@ -203,7 +204,7 @@ class SymbolTable(Singleton):
     def closeLoop(self):
         """Close a loop"""
         if(len(self.loops) == 0):
-            raise RuntimeError("No loops opened")
+            raise ScopeError("No loops opened")
 
         self.loops.pop()
         self.closeScope()

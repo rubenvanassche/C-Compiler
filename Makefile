@@ -16,3 +16,5 @@ antlr4 = java -jar /usr/local/lib/antlr-4.5.3-complete.jar
 generate:
 	$(antlr4) -Dlanguage=Python3 C.g4 -o src/
 
+test:
+	python3 -m unittest discover
