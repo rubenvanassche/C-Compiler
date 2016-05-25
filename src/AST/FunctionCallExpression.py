@@ -19,7 +19,7 @@ class FunctionCallExpression(Expression):
         return out
 
     def compile(self):
-        self.sym.getFunction(self.identifier, self.parameters)
+        pass
 
     def serialize(self, level):
         out = "Call " + str(self.identifier) + "("

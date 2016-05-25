@@ -12,7 +12,7 @@ class TypedefStatement(Statement):
         return "Typedef " + str(self.basetype) + " -> " + str(self.identifier) + "\n"
 
     def compile(self):
-        self.sym.registerAlias(self.identifier, self.basetype)
+        pass
 
     def serialize(self, level):
         return "Typedef " + self.basetype.serialize(0) + " -> " + str(self.identifier) + "\n"

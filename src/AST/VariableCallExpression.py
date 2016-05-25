@@ -21,7 +21,7 @@ class VariableCallExpression(Expression):
         return out
 
     def compile(self):
-        self.sym.getSymbol(self.symbol)
+        pass
 
     def serialize(self, level):
         out = str(self.symbol)

@@ -54,7 +54,7 @@ class ASTBuilder:
         self.filepath = filepath
         self.AST = None
 
-        self.symbolTable = SymbolTable()
+        self.sym = SymbolTable()
 
     def build(self):
         """Build the AST"""
@@ -64,18 +64,17 @@ class ASTBuilder:
         parser = CParser(stream)
         tree = parser.program()
 
-
         # Add initial program node
         self.AST = Program()
-
 
         # Add statements
         for i in range(tree.getChildCount()):
             self.AST.addStatement(self.buildStatement(tree.getChild(i)))
 
-        print(self.AST)
+        return self.AST
 
-        self.AST.compile()
+    def serialize(self):
+        print(self.AST)
 
     def buildStatement(self, tree):
         """Build Statement"""
@@ -178,10 +177,26 @@ class ASTBuilder:
         if(token.type != CLexer.RBRACE):
             raise RuntimeError("Invalid compund statement: '" + tree.getText() + "'")
 
+        # Open Scope
+        self.sym.openScope()
         # Create list with statements
         statements = []
         for i in range(1, tree.getChildCount() - 1):
             statements.append(self.buildStatement(tree.getChild(i)))
+        # Close Scope
+        self.sym.closeScope()
+
+        return CompoundStatement(statements)
+
+    def buildStatements(self, tree):
+        # Open Scope
+        self.sym.openScope()
+        # Create list with statements
+        statements = []
+        for i in range(0, tree.getChildCount()):
+            statements.append(self.buildStatement(tree.getChild(i)))
+        # Close Scope
+        self.sym.closeScope()
 
         return CompoundStatement(statements)
 
@@ -241,6 +256,11 @@ class ASTBuilder:
         if(not isinstance(token, Token) or token.type != CLexer.RPAREN):
             raise RuntimeError("Invalid function statement: '" + tree.getText() + "'")
 
+        # Register function in symbol table and open scope
+        self.sym.registerFunction(identifier, returntype, parameters, 0)
+        self.sym.openScope()
+        self.sym.registerParameters(parameters)
+
         # Check if SEMICOLON(ready) or LBRACE(parse statements)
         childIndex += 1
         token = tree.getChild(childIndex).getPayload()
@@ -264,6 +284,9 @@ class ASTBuilder:
             else:
                 raise RuntimeError("Invalid function statement: '" + tree.getText() + "'")
 
+        # close scope
+        self.sym.closeScope()
+
         return FunctionStatement(returntype, identifier, parameters, statements)
 
     def buildTypeDefStatement(self, tree):
@@ -284,6 +307,9 @@ class ASTBuilder:
 
         basetype = self.buildType(tree.getChild(1))
         identifier = tree.getChild(2).getText()
+
+        # Register in symbol Table
+        self.sym.registerAlias(identifier, basetype)
 
         return TypedefStatement(basetype, identifier)
 
@@ -364,7 +390,11 @@ class ASTBuilder:
 
         if(tree.getChildCount() == 5):
             # Done, no else clause
-            return IfelseStatement(self.buildExpression(tree.getChild(2)), self.buildStatement(tree.getChild(4)), None)
+            token = tree.getChild(4).getPayload()
+            if(token.getText() == ';'):
+                return IfelseStatement(self.buildExpression(tree.getChild(2)), None, None)
+            else:
+                return IfelseStatement(self.buildExpression(tree.getChild(2)), self.buildCompoundStatement(tree.getChild(4)), None)
 
         # we're going on with the else clause, but then we're expecting 7 children
         if (tree.getChildCount() != 7):
@@ -375,7 +405,7 @@ class ASTBuilder:
         if(not isinstance(token, Token) or token.type != CLexer.ELSE):
             raise RuntimeError("Invalid IFELSE statement: '" + tree.getText() + "'")
 
-        return IfelseStatement(self.buildExpression(tree.getChild(2)), self.buildStatement(tree.getChild(4)), self.buildStatement(tree.getChild(6)))
+        return IfelseStatement(self.buildExpression(tree.getChild(2)), self.buildCompoundStatement(tree.getChild(4)), self.buildCompoundStatement(tree.getChild(6)))
 
     def buildWhileStatement(self, tree):
         """Build While Statement"""
@@ -676,13 +706,21 @@ class ASTBuilder:
         """Build Variable Expression"""
         if(tree.getChildCount() == 1):
             # Variable call
-            return VariableCallExpression(tree.getChild(0).getText(), None)
+            symbol = tree.getChild(0).getText()
+            # Check symbol Table if symbol exists
+            self.sym.getSymbol(symbol)
+
+            return VariableCallExpression(symbol, None)
         elif(tree.getChildCount() == 2):
             # Variable Definition
-            return VariableExpression(self.buildType(tree.getChild(0)), tree.getChild(1).getText(), None)
+            basetype = self.buildType(tree.getChild(0))
+            symbol = tree.getChild(1).getText()
+            # Register in Symbol Table
+            self.sym.registerSymbol(symbol, basetype)
+
+            return VariableExpression(basetype, symbol, None)
         elif(tree.getChildCount() == 4):
             # Array
-
             token = tree.getChild(1).getPayload()
             if(not isinstance(token, Token) or token.type != CLexer.LSQUAREBRACKET):
                 raise RuntimeError("Invalid VariableExpression: '" + tree.getText() + "'")
@@ -693,10 +731,21 @@ class ASTBuilder:
 
             if(tree.getChild(0).getChildCount() == 1):
                 # call
-                return VariableCallExpression(tree.getChild(0).getChild(0).getText(), self.buildExpression(tree.getChild(2)))
+                symbol = tree.getChild(0).getChild(0).getText()
+                index = self.buildExpression(tree.getChild(2))
+
+                # Check symbol Table if symbol exists
+                self.sym.getSymbol(symbol)
+
+                return VariableCallExpression(symbol, index)
             elif(tree.getChild(0).getChildCount() == 2):
                 # definition
-                return VariableExpression(self.buildType(tree.getChild(0).getChild(0)), tree.getChild(0).getChild(1).getText(), self.buildExpression(tree.getChild(2)))
+                basetype = self.buildType(tree.getChild(0).getChild(0))
+                symbol = tree.getChild(0).getChild(1).getText()
+                arraySize = self.buildExpression(tree.getChild(2))
+                # Register in Symbol Table
+                self.sym.registerSymbol(symbol, basetype)
+                return VariableExpression(basetype, symbol, arraySize)
             else:
                 raise RuntimeError("Invalid VariableExpression: '" + tree.getText() + "'")
         else:
@@ -727,9 +776,12 @@ class ASTBuilder:
         if(not isinstance(token, Token) or token.type != CLexer.RPAREN):
             raise RuntimeError("Invalid FunctionCallExpression statement: '" + tree.getText() + "'")
 
+
+
         # Function call
         childIndex = 2
         parameters = []
+        identifier = tree.getChild(0).getText()
         while(True):
             token = tree.getChild(childIndex).getPayload()
             if(isinstance(token, Token)):
@@ -743,7 +795,10 @@ class ASTBuilder:
                 parameters.append(self.buildExpression(tree.getChild(childIndex)))
                 childIndex += 1
 
-        return FunctionCallExpression(tree.getChild(0).getText(), parameters)
+        # Check symbol table
+        self.sym.getFunction(identifier, parameters)
+
+        return FunctionCallExpression(identifier, parameters)
 
     def buildType(self, tree):
         """Build Type"""
@@ -771,7 +826,7 @@ class ASTBuilder:
                     return RealType()
                 else:
                     # Alias, check the symbol Table
-                    return self.symbolTable.getAlias(tree.getChild(0).getText()).type
+                    return self.sym.getAlias(tree.getChild(0).getText()).basetype
             else:
                 raise RuntimeError("Invalid type identifier: '" + tree.getText() + "'")
         elif(tree.getChildCount() == 2):
