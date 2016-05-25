@@ -4,7 +4,7 @@ class IncrementerExpression(Expression):
     """Node For IncrementerExpression in AST"""
 
     def __init__(self, variable):
-        Expression.__init__(self)
+        Expression.__init__(self, None)
         self.variable = variable
 
     def __str__(self):

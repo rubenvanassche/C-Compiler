@@ -4,7 +4,7 @@ class StarExpression(Expression):
     """Node For StarExpression in AST"""
 
     def __init__(self, expression):
-        Expression.__init__(self)
+        Expression.__init__(self, None)
         self.expression = expression
 
     def __str__(self):

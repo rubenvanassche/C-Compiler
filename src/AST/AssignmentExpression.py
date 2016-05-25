@@ -4,7 +4,7 @@ class AssignmentExpression(Expression):
     """Node For AssignmentExpression in AST"""
 
     def __init__(self, variable, expression):
-        Expression.__init__(self)
+        Expression.__init__(self, None)
         self.variable = variable
         self.expression = expression
 

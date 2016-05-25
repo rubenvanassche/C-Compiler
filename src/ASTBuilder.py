@@ -46,6 +46,9 @@ from src.Type.RealType import RealType
 from src.Type.Parameter import Parameter
 from src.Type.Parameter import ParametersList
 
+# Data
+from src.Data.AddressData import AddressData
+
 class ASTBuilder:
     """Class for building AST"""
 
@@ -66,6 +69,7 @@ class ASTBuilder:
 
         # Add initial program node
         self.AST = Program()
+
 
         # Add statements
         for i in range(tree.getChildCount()):
@@ -183,22 +187,15 @@ class ASTBuilder:
         statements = []
         for i in range(1, tree.getChildCount() - 1):
             statements.append(self.buildStatement(tree.getChild(i)))
+
+        # Get the used space in this compound statement
+        usedSpace = self.sym.getAllocatedSpace()
+
         # Close Scope
         self.sym.closeScope()
 
-        return CompoundStatement(statements)
+        return CompoundStatement(statements, usedSpace)
 
-    def buildStatements(self, tree):
-        # Open Scope
-        self.sym.openScope()
-        # Create list with statements
-        statements = []
-        for i in range(0, tree.getChildCount()):
-            statements.append(self.buildStatement(tree.getChild(i)))
-        # Close Scope
-        self.sym.closeScope()
-
-        return CompoundStatement(statements)
 
     def buildFunctionStatement(self, tree):
         """Build Function Statement"""
@@ -614,17 +611,17 @@ class ASTBuilder:
             raise RuntimeError("Invalid ConstantExpression: '" + tree.getText() + "'")
 
         if(token.type == CLexer.TRUE):
-            return ConstantExpression(True)
+            return ConstantExpression(True, 'bool')
         elif(token.type == CLexer.FALSE):
-            return ConstantExpression(False)
+            return ConstantExpression(False, 'bool')
         elif(token.type == CLexer.CHAR):
-            return ConstantExpression(tree.getChild(0).getText()[0])
+            return ConstantExpression(tree.getChild(0).getText()[0], 'char')
         elif(token.type == CLexer.NUM):
-            return ConstantExpression(int(tree.getChild(0).getText()))
+            return ConstantExpression(int(tree.getChild(0).getText()), 'int')
         elif(token.type == CLexer.REAL):
-            return ConstantExpression(float(tree.getChild(0).getText()))
+            return ConstantExpression(float(tree.getChild(0).getText()), 'float')
         elif(token.type == CLexer.STRING):
-            return ConstantExpression(tree.getChild(0).getText()[1:-1])
+            return ConstantExpression(tree.getChild(0).getText()[1:-1], 'string')
         else:
             raise RuntimeError("Invalid ConstantExpression: '" + tree.getText() + "'")
 

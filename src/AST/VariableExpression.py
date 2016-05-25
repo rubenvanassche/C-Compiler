@@ -4,13 +4,13 @@ class VariableExpression(Expression):
     """Node For VariableExpression in AST"""
 
     def __init__(self, basetype, symbol):
-        Expression.__init__(self)
+        Expression.__init__(self, basetype)
         self.basetype = basetype
         self.symbol = symbol
         self.arraySize = None
 
     def __init__(self, basetype, symbol, arraySize):
-        Expression.__init__(self)
+        Expression.__init__(self, basetype)
         self.basetype = basetype
         self.symbol = symbol
         self.arraySize = arraySize

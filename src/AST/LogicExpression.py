@@ -4,10 +4,18 @@ class LogicExpression(Expression):
     """Node For LogicExpression in AST"""
 
     def __init__(self, operation, leftExpression, rightExpression):
-        Expression.__init__(self)
+        Expression.__init__(self, None)
         self.operation = operation
         self.leftExpression = leftExpression
         self.rightExpression = rightExpression
+
+        # Determine the type of the expression
+        # check if types of 2 expressions are the same
+        if(self.leftExpression.basetype != self.rightExpression.basetype):
+            raise RuntimeError("The two types of the expressions in the logic expression should be the same")
+
+        # set the type of this expression
+        self.basetype = self.leftExpression.basetype
 
     def __str__(self):
         return str(self.leftExpression) + " " + str(self.operation) + " " + str(self.rightExpression)

@@ -17,6 +17,21 @@ class ForStatement(Statement):
         return out
 
     def compile(self):
+        self.sym.openLoop()
+
+        code = ""
+
+        # Get begin and end label
+        begin = self.sym.getBeginLoop()
+        end = self.sym.getEndLoop()
+
+        # compile the initial expression
+        if(self.initExpression != None):
+            pcode += self.initExpression.compile()
+
+        # Mark begin of loop
+        code = begin + ":\n"
+
         self.initExpression.compile()
         self.checkExpression.compile()
         self.updateExpression.compile()
@@ -24,9 +39,6 @@ class ForStatement(Statement):
         self.sym.openLoop()
 
         self.statement.compile()
-
-        begin = self.sym.getBeginLoop()
-        end = self.sym.getEndLoop()
 
         self.sym.closeLoop()
 

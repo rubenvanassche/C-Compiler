@@ -4,12 +4,12 @@ class VariableCallExpression(Expression):
     """Node For VariableCallExpression in AST"""
 
     def __init__(self, symbol):
-        Expression.__init__(self)
+        Expression.__init__(self, None)
         self.symbol = symbol
         self.index = None
 
     def __init__(self, symbol, index):
-        Expression.__init__(self)
+        Expression.__init__(self, None)
         self.symbol = symbol
         self.index = index
 

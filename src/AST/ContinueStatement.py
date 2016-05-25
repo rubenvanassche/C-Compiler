@@ -10,7 +10,7 @@ class ContinueStatement(Statement):
         return "Continue\n"
 
     def compile(self):
-        self.sym.getBeginLoop()
+        return "ujp " + self.sym.getBeginLoop() + "\n"
 
     def serialize(self, level):
         return  self.s(level) + "continue \n"

@@ -4,12 +4,12 @@ class FunctionCallExpression(Expression):
     """Node For FunctionCallExpression in AST"""
 
     def __init__(self, identifier):
-        Expression.__init__(self)
+        Expression.__init__(self, None)
         self.identifier = identifier
         self.parameters = []
 
     def __init__(self, identifier, parameters):
-        Expression.__init__(self)
+        Expression.__init__(self, None)
         self.identifier = identifier
         self.parameters = parameters
 
