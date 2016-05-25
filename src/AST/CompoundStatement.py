@@ -15,10 +15,8 @@ class CompoundStatement(Statement):
         return out
 
     def compile(self):
-        self.sym.openScope()
         for statement in self.statements:
             statement.compile()
-        self.sym.closeScope()
 
     def serialize(self, level):
         out = ""

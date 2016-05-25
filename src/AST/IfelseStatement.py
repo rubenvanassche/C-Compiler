@@ -25,15 +25,9 @@ class IfelseStatement(Statement):
         return out
 
     def compile(self):
-        self.sym.openScope()
         self.statement.compile()
-        self.sym.closeScope()
-
         if(self.alternativeStatement != None):
-
-            self.sym.openScope()
             self.alternativeStatement().compile()
-            self.sym.closeScope()
 
     def serialize(self, level):
         out =  "If(" + self.expression.serialize(0) + ")\n:"

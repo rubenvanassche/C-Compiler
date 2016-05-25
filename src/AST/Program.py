@@ -14,8 +14,14 @@ class Program(Node):
         return out
 
     def compile(self):
+        if(len(self.statements) == 0):
+            return "hlt\n"
+
+        code = ""
         for statement in self.statements:
-            statement.compile()
+            code += statement.compile()
+
+        return "ssp " +  self.sym.getAllocated() + "\n" + code + "hlt\n"
 
     def addStatement(self, statement):
         self.statements.append(statement)

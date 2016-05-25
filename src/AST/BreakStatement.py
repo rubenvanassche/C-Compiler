@@ -10,8 +10,7 @@ class BreakStatement(Statement):
         return "Break\n"
 
     def compile(self):
-        self.sym.getEndLoop()
-
+        return "ujp" + self.sym.getEndLoop() + "\n"
 
     def serialize(self, level):
         return  self.s(level) + "break \n"

@@ -19,16 +19,8 @@ class FunctionStatement(Statement):
         return out
 
     def compile(self):
-        self.sym.registerFunction(self.identifier, self.returntype, self.parameters, 0)
-
-        self.sym.openScope()
-
-        # Register parameters in symbol table
-        self.sym.registerParameters(self.parameters)
-
         for statement in self.statements:
             statement.compile()
-        self.sym.closeScope()
 
     def serialize(self, level):
         out = "Function " + self.identifier + "(" + str(self.parameters) + ") -> " + str(self.returntype)+" \n"

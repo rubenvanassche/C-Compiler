@@ -222,6 +222,11 @@ class SymbolTable(Singleton):
         self.labels += 1
         return int(self.labels)
 
+
+    def getAllocatedSpace(self):
+        """Get the size of the address space in use"""
+        return self.scopes[-1].allocated
+
     def __str__(self):
         """String Representation"""
         out = "Symbol Table\n"
