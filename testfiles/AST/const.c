@@ -1,6 +1,6 @@
 int main(){
-    int const c;
-    const int c;
+    int const a;
+    const int b;
     int c;
-    int a[10];
+    int d[10];
 }

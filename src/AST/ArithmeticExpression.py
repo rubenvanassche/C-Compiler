@@ -3,11 +3,12 @@ from src.AST.Expression import Expression
 class ArithmeticExpression(Expression):
     """Node For ArithmeticExpression in AST"""
 
-    def __init__(self, operation, leftExpression, rightExpression):
+    def __init__(self, leftExpression, rightExpression, operation):
         Expression.__init__(self, None)
         self.operation = operation
         self.leftExpression = leftExpression
         self.rightExpression = rightExpression
+
 
         # Determine the type of the expression
         # check if types of 2 expressions are the same

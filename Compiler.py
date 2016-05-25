@@ -17,12 +17,14 @@ def main(argv):
 
     astBuilder = ASTBuilder(argv[1])
     ast = astBuilder.build()
-    compiled = ast.compile()
+    #compiled = ast.compile()
 
     # Write to file
-    file = open("compiled.p", "w")
-    file.write(compiled)
-    file.close()
+    #file = open("compiled.p", "w")
+    #file.write(compiled)
+    #file.close()
+
+    print("Compilation complete!")
 
     # Should we serialize
     if(len(argv) > 2 and argv[2] == "-saveast"):

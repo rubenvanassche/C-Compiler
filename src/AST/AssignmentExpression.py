@@ -8,6 +8,8 @@ class AssignmentExpression(Expression):
         self.variable = variable
         self.expression = expression
 
+        self.basetype = self.expression.basetype
+
     def __str__(self):
         return str(self.variable) + " = " + str(self.expression) + "\n"
 

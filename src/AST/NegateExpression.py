@@ -7,6 +7,8 @@ class NegateExpression(Expression):
         Expression.__init__(self, None)
         self.expression = expression
 
+        self.basetype = self.expression.basetype
+
     def __str__(self):
         return "-" + str(self.expression)
 

@@ -7,6 +7,8 @@ class StarExpression(Expression):
         Expression.__init__(self, None)
         self.expression = expression
 
+        self.basetype = self.expression.basetype
+
     def __str__(self):
         return "Star(" + str(self.expression) + ")"
 

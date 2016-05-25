@@ -7,6 +7,8 @@ class IncrementerExpression(Expression):
         Expression.__init__(self, None)
         self.variable = variable
 
+        self.basetype = self.variable.basetype
+
     def __str__(self):
         return str(self.variable) + "++"
 

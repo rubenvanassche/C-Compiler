@@ -3,7 +3,7 @@ from src.AST.Expression import Expression
 class LogicExpression(Expression):
     """Node For LogicExpression in AST"""
 
-    def __init__(self, operation, leftExpression, rightExpression):
+    def __init__(self, leftExpression, rightExpression, operation):
         Expression.__init__(self, None)
         self.operation = operation
         self.leftExpression = leftExpression

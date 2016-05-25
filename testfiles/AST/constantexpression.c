@@ -1,8 +1,8 @@
 int main(){
-    a = "aaaaa";
-     b = 0.5;
-c = 122;
-d= 'a';
-e = true;
-f = false;
+    char a[6] = "aaaaa";
+     float b = 0.5;
+int c = 122;
+char d= 'a';
+bool e = true;
+bool f = false;
 }

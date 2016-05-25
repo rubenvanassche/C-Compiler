@@ -8,10 +8,14 @@ class FunctionCallExpression(Expression):
         self.identifier = identifier
         self.parameters = []
 
+        self.basetype = self.sym.getFunction(identifier, []).returntype
+
     def __init__(self, identifier, parameters):
         Expression.__init__(self, None)
         self.identifier = identifier
         self.parameters = parameters
+
+        self.basetype = self.sym.getFunction(identifier, []).returntype
 
     def __str__(self):
         out = "Call " + str(self.identifier) + "("

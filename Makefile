@@ -18,3 +18,19 @@ generate:
 
 test:
 	python3 -m unittest discover
+
+testold:
+	python3 Compiler.py testfiles/ast/arithmetic.c -saveast
+	python3 Compiler.py testfiles/ast/assignment.c -saveast
+	python3 Compiler.py testfiles/ast/compoundstatement.c -saveast
+	python3 Compiler.py testfiles/ast/const.c -saveast
+	python3 Compiler.py testfiles/ast/constantexpression.c -saveast
+	python3 Compiler.py testfiles/ast/for.c -saveast
+	python3 Compiler.py testfiles/ast/function.c -saveast
+	python3 Compiler.py testfiles/ast/functioncall.c -saveast
+	python3 Compiler.py testfiles/ast/if.c -saveast
+	python3 Compiler.py testfiles/ast/include.c -saveast
+	python3 Compiler.py testfiles/ast/negatenot.c -saveast
+	python3 Compiler.py testfiles/ast/typedef.c -saveast
+	python3 Compiler.py testfiles/ast/variables.c -saveast
+	python3 Compiler.py testfiles/ast/while.c -saveast
