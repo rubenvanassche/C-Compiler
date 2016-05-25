@@ -13,6 +13,7 @@ class ArithmeticExpression(Expression):
         return str(self.leftExpression) + " " + str(self.operation) + " " + str(self.rightExpression)
 
     def compile(self):
+        operations = {'+' : 'add', '-' : 'sub', '/' : 'div', '*' : 'mul'}
         return ""
 
     def serialize(self, level):

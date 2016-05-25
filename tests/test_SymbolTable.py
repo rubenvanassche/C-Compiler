@@ -148,7 +148,23 @@ class TestUM(unittest.TestCase):
         boolean = BooleanType()
         character = CharacterType()
 
-        st.registerAlias('integer', integer)
+        st.registerAlias('a', integer)
+
+        # call in scope
+        self.assertEqual(type(st.getSymbol('a').basetype), IntegerType)
+
+        # call in nested scope
         st.openScope()
+        self.assertEqual(type(st.getSymbol('a').basetype), IntegerType)
+
+        # define in nested scope
+        st.registerSymbol('a', character)
+
+        # call in nested scope
+        self.assertEqual(type(st.getSymbol('a').basetype), CharacterType)
+
+        # call original in main scope
+        st.closeScope()
+        self.assertEqual(type(st.getSymbol('a').basetype), IntegerType)
 if __name__ == '__main__':
     unittest.main()
