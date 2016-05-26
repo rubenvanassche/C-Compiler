@@ -15,7 +15,8 @@ class FunctionCallExpression(Expression):
         self.identifier = identifier
         self.parameters = parameters
 
-        self.basetype = self.sym.getFunction(identifier, []).returntype
+        print(self.sym)
+        self.basetype = self.sym.getFunction(identifier, parameters).returntype
 
     def __str__(self):
         out = "Call " + str(self.identifier) + "("

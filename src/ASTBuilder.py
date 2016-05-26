@@ -45,6 +45,8 @@ from src.Type.RealType import RealType
 
 from src.Type.Parameter import Parameter
 from src.Type.Parameter import ParametersList
+from src.Type.Parameter import Argument
+from src.Type.Parameter import ArgumentsList
 
 # Data
 from src.Data.AddressData import AddressData
@@ -69,6 +71,7 @@ class ASTBuilder:
 
         # Add initial program node
         self.AST = Program()
+
 
 
         # Add statements
@@ -207,7 +210,7 @@ class ASTBuilder:
 
         returntype = self.buildType(tree.getChild(0))
         identifier = tree.getChild(1).getText()
-        parameters = ParametersList()
+        arguments = ArgumentsList()
         statements = []
 
         # check for LPAREN
@@ -224,13 +227,13 @@ class ASTBuilder:
                     break
                 elif(token.type == CLexer.VOID):
                     # Set the type to VOID
-                    parameterBasetype = None
-                    parameterIdentifier = tree.getChild(childIndex+1).getText()
-                    if(parameterIdentifier == None):
-                        raise RuntimeError("Invalid compund statement: '" + tree.getText() + "', no identifier for paramter")
+                    argumentBasetype = None
+                    argumentIdentifier = tree.getChild(childIndex+1).getText()
+                    if(argumentIdentifier == None):
+                        raise RuntimeError("Invalid compund statement: '" + tree.getText() + "', no identifier for argument")
 
 
-                    parameters.add(Parameter(parameterIdentifier, parameterBasetype))
+                    arguments.add(Argument(argumentIdentifier, argumentBasetype))
                     childIndex += 1
                 elif(token.type == CLexer.COMMA):
                     # skip
@@ -239,13 +242,13 @@ class ASTBuilder:
                     # skip
                     childIndex += 1
             else:
-                parameterBasetype = self.buildType(tree.getChild(childIndex))
-                parameterIdentifier = tree.getChild(childIndex+1).getText()
-                if(parameterIdentifier == None):
-                    raise RuntimeError("Invalid compund statement: '" + tree.getText() + "', no identifier for paramter")
+                argumentBasetype = self.buildType(tree.getChild(childIndex))
+                argumentIdentifier = tree.getChild(childIndex+1).getText()
+                if(argumentIdentifier == None):
+                    raise RuntimeError("Invalid compund statement: '" + tree.getText() + "', no identifier for argument")
 
 
-                parameters.add(Parameter(parameterIdentifier, parameterBasetype))
+                arguments.add(Argument(argumentIdentifier, argumentBasetype))
                 childIndex += 1
 
         # check for RPAREN
@@ -254,9 +257,9 @@ class ASTBuilder:
             raise RuntimeError("Invalid function statement: '" + tree.getText() + "'")
 
         # Register function in symbol table and open scope
-        self.sym.registerFunction(identifier, returntype, parameters, 0)
+        self.sym.registerFunction(identifier, returntype, arguments, 0)
         self.sym.openScope()
-        self.sym.registerParameters(parameters)
+        self.sym.registerArguments(arguments)
 
         # Check if SEMICOLON(ready) or LBRACE(parse statements)
         childIndex += 1
@@ -284,7 +287,7 @@ class ASTBuilder:
         # close scope
         self.sym.closeScope()
 
-        return FunctionStatement(returntype, identifier, parameters, statements)
+        return FunctionStatement(returntype, identifier, arguments, statements)
 
     def buildTypeDefStatement(self, tree):
         """Build Typedef Statement"""
@@ -334,9 +337,9 @@ class ASTBuilder:
         childIndex = 2
         semicolonIndex = 0
 
-        initExpression = Expression()
-        checkExpression = Expression()
-        updateExpression = Expression()
+        initExpression = Expression(None)
+        checkExpression = Expression(None)
+        updateExpression = Expression(None)
 
         while(True):
             token = tree.getChild(childIndex).getPayload()
@@ -777,7 +780,7 @@ class ASTBuilder:
 
         # Function call
         childIndex = 2
-        parameters = []
+        parameters = ParametersList()
         identifier = tree.getChild(0).getText()
         while(True):
             token = tree.getChild(childIndex).getPayload()
@@ -789,7 +792,8 @@ class ASTBuilder:
                 else:
                     raise RuntimeError("Invalid FunctionCallExpression statement: '" + tree.getText() + "'")
             else:
-                parameters.append(self.buildExpression(tree.getChild(childIndex)))
+                parameter = Parameter(self.buildExpression(tree.getChild(childIndex)))
+                parameters.add(parameter)
                 childIndex += 1
 
         # Check symbol table

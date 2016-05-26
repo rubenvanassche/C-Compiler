@@ -43,10 +43,13 @@ class Scope:
         """Returns true if the scope has the alias"""
         return False if self.getAlias(identifier) == None else True
 
-    def isContainingFunction(self, identifier, parameters):
+    def isContainingFunction(self, identifier, arguments):
         """Returns true if the scope has the function"""
-        return False if self.getFunction(identifier, parameters) == None else True
+        for function in self.functions:
+            if function.identifier == identifier and arguments == function.arguments:
+                return True
 
+        return False
 
     def getSymbol(self, identifier):
         """Get the symbol in the scope"""
@@ -64,11 +67,11 @@ class Scope:
 
         return None
 
-    # parameters is [] and not Parameterslist
+    # parameters is Parameterslist
     def getFunction(self, identifier, parameters):
         """Get the function in the scope"""
         for function in self.functions:
-            if function.identifier == identifier and function.parameters.checkCallArguments(parameters):
+            if function.identifier == identifier and function.arguments.checkCallParameters(parameters):
                 return function
 
         return None
@@ -90,11 +93,11 @@ class Alias:
 
 class Function:
     """Representation of a Function"""
-    def __init__(self, identifier, returntype, parameters, address):
-        """Initialize with an identifier(string), returnType(Type), parameters(ParametersList) and adress(int)"""
+    def __init__(self, identifier, returntype, arguments, address):
+        """Initialize with an identifier(string), returnType(Type), argument(argumentList) and adress(int)"""
         self.identifier = identifier
         self.returntype = returntype
-        self.parameters = parameters
+        self.arguments = arguments
         self.address = address
 
 class Loop:
@@ -150,17 +153,17 @@ class SymbolTable(Singleton):
 
         self.scopes[-1].addAlias(Alias(identifier, basetype))
 
-    def registerFunction(self, identifier, returntype, parameters, address):
-        """Register a Function in the current scope with an identifier(string), returntype(Type), paramters(ParametersList) and address(int)"""
-        if(self.scopes[-1].isContainingFunction(identifier, parameters)):
+    def registerFunction(self, identifier, returntype, arguments, address):
+        """Register a Function in the current scope with an identifier(string), returntype(Type), arguments(ArgumentsList) and address(int)"""
+        if(self.scopes[-1].isContainingFunction(identifier, arguments)):
             raise FunctionAlreadyRegisteredError("Function '"+ identifier +"' already registered in scope")
 
-        self.scopes[-1].addFunction(Function(identifier, returntype, parameters, address))
+        self.scopes[-1].addFunction(Function(identifier, returntype, arguments, address))
 
-    def registerParameters(self, parameters):
-        """Register the symbols in an parameters(ParametersList)"""
-        for parameter in parameters.parameters:
-            self.registerSymbol(parameter.identifier, parameter.basetype)
+    def registerArguments(self, arguments):
+        """Register the symbols in an arguments(ArgumentsList)"""
+        for argument in arguments.arguments:
+            self.registerSymbol(argument.identifier, argument.basetype)
 
     def getSymbol(self, identifier):
         """Get a symbol from the Symbol Table with an identifier(string)"""
@@ -184,7 +187,7 @@ class SymbolTable(Singleton):
 
     # Parameters is [] and not ParametersList
     def getFunction(self, identifier, parameters):
-        """Get a function from the Symbol Table with an identifier(string) and parameters([Expression])"""
+        """Get a function from the Symbol Table with an identifier(string) and parameters(ParametersList)"""
         for scope in reversed(self.scopes):
             function = scope.getFunction(identifier, parameters)
 
@@ -242,6 +245,10 @@ class SymbolTable(Singleton):
             out += "    Aliases: "
             for alias in scope.aliases:
                 out += alias.identifier + ","
+            out += "\n"
+            out += "    Functions: "
+            for function in scope.functions:
+                out += function.identifier + ","
             out += "\n"
 
             counter += 1

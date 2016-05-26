@@ -25,7 +25,6 @@ testold:
 	python3 Compiler.py testfiles/ast/compoundstatement.c -saveast
 	python3 Compiler.py testfiles/ast/const.c -saveast
 	python3 Compiler.py testfiles/ast/constantexpression.c -saveast
-	python3 Compiler.py testfiles/ast/for.c -saveast
 	python3 Compiler.py testfiles/ast/function.c -saveast
 	python3 Compiler.py testfiles/ast/functioncall.c -saveast
 	python3 Compiler.py testfiles/ast/if.c -saveast
@@ -34,3 +33,19 @@ testold:
 	python3 Compiler.py testfiles/ast/typedef.c -saveast
 	python3 Compiler.py testfiles/ast/variables.c -saveast
 	python3 Compiler.py testfiles/ast/while.c -saveast
+	python3 Compiler.py testfiles/ast/for.c -saveast
+
+testsymbol:
+	python3 Compiler.py testfiles/Symboltable/test1.c
+	python3 Compiler.py testfiles/Symboltable/test2.c
+	python3 Compiler.py testfiles/Symboltable/test3.c
+	python3 Compiler.py testfiles/Symboltable/test4.c
+	python3 Compiler.py testfiles/Symboltable/test5.c
+	python3 Compiler.py testfiles/Symboltable/test6.c
+	python3 Compiler.py testfiles/Symboltable/test7.c
+	python3 Compiler.py testfiles/Symboltable/test8.c
+	python3 Compiler.py testfiles/Symboltable/test9.c
+	python3 Compiler.py testfiles/Symboltable/test10.c
+	python3 Compiler.py testfiles/Symboltable/test11.c
+	python3 Compiler.py testfiles/Symboltable/test12.c
+	python3 Compiler.py testfiles/Symboltable/test13.c

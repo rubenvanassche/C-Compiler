@@ -1,5 +1,6 @@
 import unittest
 from src.SymbolTable import SymbolTable
+from src.SymbolTable import Function
 from src.Exceptions.SymbolTable import *
 
 from src.Type.IntegerType import IntegerType
@@ -9,9 +10,22 @@ from src.Type.BooleanType import BooleanType
 from src.Type.CharacterType import CharacterType
 from src.Type.RealType import RealType
 
+from src.Type.Parameter import ParametersList
+from src.Type.Parameter import Parameter
+from src.Type.Parameter import ArgumentsList
+from src.Type.Parameter import Argument
+
+from src.AST.ConstantExpression import ConstantExpression
+
 class TestUM(unittest.TestCase):
     def setUp(self):
         self.st = SymbolTable()
+
+    def test_singleton(self):
+        st1 = SymbolTable()
+        st1.openScope()
+        st2 = SymbolTable()
+        st2.closeScope()
 
     def test_close_main_scope(self):
         # Should crash
@@ -166,5 +180,121 @@ class TestUM(unittest.TestCase):
         # call original in main scope
         st.closeScope()
         self.assertEqual(type(st.getSymbol('a').basetype), IntegerType)
+
+    def test_function_register_and_get_no_arguments(self):
+        st = SymbolTable()
+        integer = IntegerType()
+        real = RealType()
+        boolean = BooleanType()
+        character = CharacterType()
+
+
+        # Register basic function, no arguments
+        st.registerFunction('hello', integer, ArgumentsList(), 0)
+
+        # register function again, shouldn't work
+        self.assertRaises(FunctionAlreadyRegisteredError, lambda: st.registerFunction('hello', integer, ArgumentsList(), 0))
+
+        # register function again with other return type, shouldn't work
+        self.assertRaises(FunctionAlreadyRegisteredError, lambda: st.registerFunction('hello', boolean, ArgumentsList(), 0))
+
+        # get basic function
+        self.assertEqual(type(st.getFunction('hello', ParametersList())), Function)
+
+        # get not known function, should not work
+        self.assertRaises(FunctionNotRegisteredError, lambda: st.getFunction('add', ParametersList()))
+
+    def test_function_register_and_get_with_arguments(self):
+        st = SymbolTable()
+        integer = IntegerType()
+        real = RealType()
+        boolean = BooleanType()
+        character = CharacterType()
+
+        # Create arguments
+        argumentsList = ArgumentsList()
+        argumentsList.add(Argument('a', integer))
+        argumentsList.add(Argument('b', real))
+
+        # Create parameters
+        parametersList = ParametersList()
+        parametersList.add(Parameter(ConstantExpression(1, 'int')))
+        parametersList.add(Parameter(ConstantExpression(3.14, 'float')))
+
+        # fake ParametersList, has one parameters less
+        fakeParametersList = ParametersList()
+        fakeParametersList.add(Parameter(ConstantExpression(1, 'int')))
+
+        # Register basic function,  arguments
+        st.registerFunction('add', integer, argumentsList, 0)
+
+        # register function again, shouldn't work
+        self.assertRaises(FunctionAlreadyRegisteredError, lambda: st.registerFunction('add', integer, argumentsList, 0))
+
+        # register function again with other return type, shouldn't work
+        self.assertRaises(FunctionAlreadyRegisteredError, lambda: st.registerFunction('add', boolean, argumentsList, 0))
+
+        # get basic function
+        self.assertEqual(type(st.getFunction('add', parametersList)), Function)
+
+        # get not known function, should not work
+        self.assertRaises(FunctionNotRegisteredError, lambda: st.getFunction('hello', parametersList))
+
+        # get the function with no arguments, shouldn't work
+        self.assertRaises(FunctionNotRegisteredError, lambda: st.getFunction('add', ParametersList()))
+
+        # get the function with wrong arguments, shouldn't work
+        self.assertRaises(FunctionNotRegisteredError, lambda: st.getFunction('add', fakeParametersList))
+
+    def test_function_scoped(self):
+        st = SymbolTable()
+        integer = IntegerType()
+        real = RealType()
+        boolean = BooleanType()
+        character = CharacterType()
+
+        # Create arguments
+        argumentsList = ArgumentsList()
+        argumentsList.add(Argument('a', integer))
+        argumentsList.add(Argument('b', real))
+
+        # Create parameters
+        parametersList = ParametersList()
+        parametersList.add(Parameter(ConstantExpression(1, 'int')))
+        parametersList.add(Parameter(ConstantExpression(3.14, 'float')))
+
+        # Register basic function, no arguments
+        st.registerFunction('add', integer, argumentsList, 0)
+
+        # Call function in main scope
+        self.assertEqual(type(st.getFunction('add', parametersList)), Function)
+
+        # open scope and get function again
+        st.openScope()
+        self.assertEqual(type(st.getFunction('add', parametersList)), Function)
+
+        # register function in scope
+        st.registerFunction('divide', integer, argumentsList, 0)
+
+        # call new function in scope
+        self.assertEqual(type(st.getFunction('add', parametersList)), Function)
+
+        # close scope and call new created function, shouldn't work
+        st.closeScope()
+        self.assertRaises(FunctionNotRegisteredError, lambda:st.getFunction('divide', parametersList) )
+
+        # open scope and register add again
+        st.openScope()
+        st.registerFunction('add', integer, argumentsList, 0)
+        self.assertEqual(type(st.getFunction('add', parametersList)), Function)
+        self.assertRaises(FunctionAlreadyRegisteredError, lambda:st.registerFunction('add', integer, argumentsList, 0) )
+        st.closeScope()
+
+        # register function in higher scope and call in lower scope
+        st.registerFunction('multiply', integer, argumentsList, 0)
+        st.openScope()
+        self.assertEqual(type(st.getFunction('multiply', parametersList)), Function)
+        self.assertRaises(FunctionNotRegisteredError, lambda:st.getFunction('multiplynotexisting', parametersList) )
+        st.closeScope
 if __name__ == '__main__':
     unittest.main()
