@@ -19,13 +19,7 @@ from src.AST.ConstantExpression import ConstantExpression
 
 class TestUM(unittest.TestCase):
     def setUp(self):
-        self.st = SymbolTable()
-
-    def test_singleton(self):
-        st1 = SymbolTable()
-        st1.openScope()
-        st2 = SymbolTable()
-        st2.closeScope()
+        pass
 
     def test_close_main_scope(self):
         # Should crash

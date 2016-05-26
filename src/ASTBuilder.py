@@ -54,12 +54,12 @@ from src.Data.AddressData import AddressData
 class ASTBuilder:
     """Class for building AST"""
 
-    def __init__(self, filepath):
+    def __init__(self, filepath, symboltable):
         """Initialize with path to file(string)"""
         self.filepath = filepath
         self.AST = None
 
-        self.sym = SymbolTable()
+        self.sym = symboltable
 
     def build(self):
         """Build the AST"""

@@ -1,14 +1,6 @@
 from src.Type.IntegerType import IntegerType
 from src.Exceptions.SymbolTable import *
 
-class Singleton(object):
-    """Utility for creating Singletons"""
-    _instance = None
-    def __new__(class_, *args, **kwargs):
-        if not isinstance(class_._instance, class_):
-            class_._instance = object.__new__(class_, *args, **kwargs)
-        return class_._instance
-
 class Scope:
     """An Scope in the program"""
     def __init__(self, allocated):
@@ -108,8 +100,9 @@ class Loop:
         self.end = end
 
 
-class SymbolTable(Singleton):
+class SymbolTable:
     """Representation of a Symbol Table"""
+
     def __init__(self):
         """Initializer, will also open the global scope"""
         self.scopes = []

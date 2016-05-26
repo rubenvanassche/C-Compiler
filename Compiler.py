@@ -1,6 +1,7 @@
 import os.path, sys
 sys.path.insert(0,'src')
 from ASTBuilder import ASTBuilder
+from SymbolTable import SymbolTable
 
 def main(argv):
     # Case no file was defined
@@ -15,7 +16,8 @@ def main(argv):
         print("C2P Compiler")
         print("------------")
 
-    astBuilder = ASTBuilder(argv[1])
+    symboltable = SymbolTable()
+    astBuilder = ASTBuilder(argv[1], symboltable)
     ast = astBuilder.build()
     #compiled = ast.compile()
 
