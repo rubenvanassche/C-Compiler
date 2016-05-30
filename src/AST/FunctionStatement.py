@@ -19,8 +19,11 @@ class FunctionStatement(Statement):
         return out
 
     def compile(self):
+        code = "TODO- Function statement\n"
         for statement in self.statements:
-            statement.compile()
+            code += statement.compile()
+
+        return code
 
     def serialize(self, level):
         out = "Function " + self.identifier + "(" + str(self.parameters) + ") -> " + str(self.returntype)+" \n"

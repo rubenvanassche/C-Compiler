@@ -392,9 +392,9 @@ class ASTBuilder:
             # Done, no else clause
             token = tree.getChild(4).getPayload()
             if(token.getText() == ';'):
-                return IfelseStatement(self.buildExpression(tree.getChild(2)), None, None)
+                return IfelseStatement(self.buildExpression(tree.getChild(2)), None, None, self.sym)
             else:
-                return IfelseStatement(self.buildExpression(tree.getChild(2)), self.buildCompoundStatement(tree.getChild(4)), None)
+                return IfelseStatement(self.buildExpression(tree.getChild(2)), self.buildCompoundStatement(tree.getChild(4)), None, self.sym)
 
         # we're going on with the else clause, but then we're expecting 7 children
         if (tree.getChildCount() != 7):
@@ -405,7 +405,7 @@ class ASTBuilder:
         if(not isinstance(token, Token) or token.type != CLexer.ELSE):
             raise RuntimeError("Invalid IFELSE statement: '" + tree.getText() + "'")
 
-        return IfelseStatement(self.buildExpression(tree.getChild(2)), self.buildCompoundStatement(tree.getChild(4)), self.buildCompoundStatement(tree.getChild(6)))
+        return IfelseStatement(self.buildExpression(tree.getChild(2)), self.buildCompoundStatement(tree.getChild(4)), self.buildCompoundStatement(tree.getChild(6)), self.sym)
 
     def buildWhileStatement(self, tree):
         """Build While Statement"""
@@ -708,9 +708,9 @@ class ASTBuilder:
             # Variable call
             symbol = tree.getChild(0).getText()
             # Check symbol Table if symbol exists
-            self.sym.getSymbol(symbol)
+            variable = self.sym.getSymbol(symbol)
 
-            return VariableCallExpression(symbol, None)
+            return VariableCallExpression(symbol, variable.basetype,  None)
         elif(tree.getChildCount() == 2):
             # Variable Definition
             basetype = self.buildType(tree.getChild(0))
@@ -735,9 +735,9 @@ class ASTBuilder:
                 index = self.buildExpression(tree.getChild(2))
 
                 # Check symbol Table if symbol exists
-                self.sym.getSymbol(symbol)
+                variable = self.sym.getSymbol(symbol)
 
-                return VariableCallExpression(symbol, index)
+                return VariableCallExpression(symbol, variable.basetype, index)
             elif(tree.getChild(0).getChildCount() == 2):
                 # definition
                 basetype = self.buildType(tree.getChild(0).getChild(0))
@@ -797,9 +797,9 @@ class ASTBuilder:
                 childIndex += 1
 
         # Check symbol table
-        self.sym.getFunction(identifier, parameters)
+        function = self.sym.getFunction(identifier, parameters)
 
-        return FunctionCallExpression(identifier, parameters)
+        return FunctionCallExpression(identifier, function.returntype, parameters)
 
     def buildType(self, tree):
         """Build Type"""

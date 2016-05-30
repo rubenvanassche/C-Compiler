@@ -1,4 +1,5 @@
 from src.AST.Statement import Statement
+from src.Type.BooleanType import BooleanType
 
 class ForStatement(Statement):
     """Node For ForStatement in AST"""
@@ -19,8 +20,6 @@ class ForStatement(Statement):
     def compile(self):
         self.sym.openLoop()
 
-        code = ""
-
         # Get begin and end label
         begin = self.sym.getBeginLoop()
         end = self.sym.getEndLoop()
@@ -32,15 +31,29 @@ class ForStatement(Statement):
         # Mark begin of loop
         code = begin + ":\n"
 
-        self.initExpression.compile()
-        self.checkExpression.compile()
-        self.updateExpression.compile()
+        # Check if check is an boolean Expression
+        if(type(self.checkExpression.basetype) != type(BooleanType())):
+            raise RuntimeError("Check condition in for loop should be of boolean type")
 
-        self.sym.openLoop()
+        # Compile check
+        code += "fjp " + end + "\n"
 
-        self.statement.compile()
+        # Compile the statement
+        code += self.statement.compile()
+
+        # compile the update
+        code += self.updateExpression.compile()
+
+        # Jump to begin with unconditional Jump
+        code += "ujp " + begin + "\n"
+
+        # Mark end of for loop
+        code += end + ":\n"
 
         self.sym.closeLoop()
+
+        return code
+    
 
     def serialize(self, level):
         out = "For(" + self.initExpression.serialize(0) + ", " + self.checkExpression.serialize(0) + ", " + self.updateExpression.serialize(0) + ")\n"

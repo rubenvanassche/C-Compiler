@@ -1,5 +1,5 @@
 int main(){
     if(true);
-    if(true){a = 3;}
-    if(true){c = 4;}else{d = 5;}
+    if(true){int a = 3;}
+    if(true){int c = 4;}else{int d = 5;}
 }

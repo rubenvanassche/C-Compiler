@@ -1,2 +1,2 @@
 while(true);
-while(a = 5){a= 5;}
+while(int a = 5){a = 5;}

@@ -213,8 +213,8 @@ class SymbolTable:
         """Get the end label of the loop"""
         return self.loops[-1].end
 
-    def getLabel(self):
-        """Get a label"""
+    def createLabel(self):
+        """Create a label"""
         self.labels += 1
         return int(self.labels)
 

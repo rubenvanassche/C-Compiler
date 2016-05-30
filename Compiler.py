@@ -32,8 +32,5 @@ def main(argv):
     if(len(argv) > 2 and argv[2] == "-saveast"):
         astBuilder.serialize()
 
-
-
-
 if __name__ == '__main__':
     main(sys.argv)

@@ -1,12 +1,11 @@
 int main(){
+    int a = 0;
+    int b = 0;
     a + b;
     a == b;
-    int a;
-    int b;
-    a[3];
-    int a[10];
-    a = 10;
     a--;
     a++;
-    int c = &b;
+    int c[10];
+    c[3];
+    a = &b;
 }

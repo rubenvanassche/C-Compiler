@@ -12,7 +12,7 @@ class TypedefStatement(Statement):
         return "Typedef " + str(self.basetype) + " -> " + str(self.identifier) + "\n"
 
     def compile(self):
-        pass
+        return "Todo: TYpedef"
 
     def serialize(self, level):
         return "Typedef " + self.basetype.serialize(0) + " -> " + str(self.identifier) + "\n"

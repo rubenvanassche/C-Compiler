@@ -3,19 +3,19 @@ from src.AST.Expression import Expression
 class VariableCallExpression(Expression):
     """Node For VariableCallExpression in AST"""
 
-    def __init__(self, symbol):
+    def __init__(self, symbol, returntype):
         Expression.__init__(self, None)
         self.symbol = symbol
         self.index = None
 
-        self.basetype = self.sym.getSymbol(symbol).basetype
+        self.basetype = returntype
 
-    def __init__(self, symbol, index):
+    def __init__(self, symbol, returntype,  index):
         Expression.__init__(self, None)
         self.symbol = symbol
         self.index = index
 
-        self.basetype = self.sym.getSymbol(symbol).basetype
+        self.basetype = returntype
 
     def __str__(self):
         out = "Call " + str(self.symbol)
