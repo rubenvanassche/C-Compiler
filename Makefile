@@ -20,20 +20,20 @@ test:
 	python3 -m unittest discover
 
 testold:
-	python3 Compiler.py testfiles/ast/arithmetic.c -saveast
-	python3 Compiler.py testfiles/ast/assignment.c -saveast
-	python3 Compiler.py testfiles/ast/compoundstatement.c -saveast
-	python3 Compiler.py testfiles/ast/const.c -saveast
-	python3 Compiler.py testfiles/ast/constantexpression.c -saveast
-	python3 Compiler.py testfiles/ast/function.c -saveast
-	python3 Compiler.py testfiles/ast/functioncall.c -saveast
-	python3 Compiler.py testfiles/ast/if.c -saveast
-	python3 Compiler.py testfiles/ast/include.c -saveast
-	python3 Compiler.py testfiles/ast/negatenot.c -saveast
-	python3 Compiler.py testfiles/ast/typedef.c -saveast
-	python3 Compiler.py testfiles/ast/variables.c -saveast
-	python3 Compiler.py testfiles/ast/while.c -saveast
-	python3 Compiler.py testfiles/ast/for.c -saveast
+	python3 Compiler.py testfiles/ast/arithmetic.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/assignment.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/compoundstatement.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/const.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/constantexpression.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/function.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/functioncall.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/if.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/include.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/negatenot.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/typedef.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/variables.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/while.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/for.c -showast -o testoutput
 
 testsymbol:
 	python3 Compiler.py testfiles/Symboltable/test1.c
