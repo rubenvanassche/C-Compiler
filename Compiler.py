@@ -13,7 +13,6 @@ def main(argv):
     parser.add_argument('-n','--nocompile', help='Disable the compilation phase',  action='store_true')
     args = vars(parser.parse_args())
 
-    print(args)
     filepath = os.path.split(args["file"])
     filename = os.path.splitext(filepath[1])[0]
     outputpath = ""
@@ -24,7 +23,8 @@ def main(argv):
     astBuilder = ASTBuilder(args["file"], symboltable)
     ast = astBuilder.build()
 
-    if(args["nocompile"] != False):
+
+    if(bool(args["nocompile"]) == False):
         compiled = ast.compile()
 
         # Write to file
