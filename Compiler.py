@@ -19,12 +19,12 @@ def main(argv):
     symboltable = SymbolTable()
     astBuilder = ASTBuilder(argv[1], symboltable)
     ast = astBuilder.build()
-    #compiled = ast.compile()
+    compiled = ast.compile()
 
     # Write to file
-    #file = open("compiled.p", "w")
-    #file.write(compiled)
-    #file.close()
+    file = open("compiled.p", "w")
+    file.write(compiled)
+    file.close()
 
     print("Compilation complete!")
 

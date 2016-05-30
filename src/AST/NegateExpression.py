@@ -13,7 +13,7 @@ class NegateExpression(Expression):
         return "-" + str(self.expression)
 
     def compile(self):
-        return ""
+        return "Todo:negate expresison \n"
 
     def serialize(self, level):
         return "-" + self.expression.serialize(0)

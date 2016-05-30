@@ -24,19 +24,21 @@ class ForStatement(Statement):
         begin = self.sym.getBeginLoop()
         end = self.sym.getEndLoop()
 
+        code = ""
+        
         # compile the initial expression
         if(self.initExpression != None):
-            pcode += self.initExpression.compile()
+            code += self.initExpression.compile()
 
         # Mark begin of loop
-        code = begin + ":\n"
+        code = str(begin) + ":\n"
 
         # Check if check is an boolean Expression
         if(type(self.checkExpression.basetype) != type(BooleanType())):
             raise RuntimeError("Check condition in for loop should be of boolean type")
 
         # Compile check
-        code += "fjp " + end + "\n"
+        code += "fjp " + str(end) + "\n"
 
         # Compile the statement
         code += self.statement.compile()
@@ -45,15 +47,15 @@ class ForStatement(Statement):
         code += self.updateExpression.compile()
 
         # Jump to begin with unconditional Jump
-        code += "ujp " + begin + "\n"
+        code += "ujp " + str(begin) + "\n"
 
         # Mark end of for loop
-        code += end + ":\n"
+        code += str(end) + ":\n"
 
         self.sym.closeLoop()
 
         return code
-    
+
 
     def serialize(self, level):
         out = "For(" + self.initExpression.serialize(0) + ", " + self.checkExpression.serialize(0) + ", " + self.updateExpression.serialize(0) + ")\n"

@@ -21,7 +21,7 @@ class Program(Node):
         for statement in self.statements:
             code += statement.compile()
 
-        return "ssp " +  self.sym.getAllocated() + "\n" + code + "hlt\n"
+        return "ssp " +  str(self.sym.getAllocatedSpace()) + "\n" + code + "hlt\n"
 
     def addStatement(self, statement):
         self.statements.append(statement)

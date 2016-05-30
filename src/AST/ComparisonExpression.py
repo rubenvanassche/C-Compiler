@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.Type.BooleanType import BooleanType
 
 class ComparisonExpression(Expression):
     """Node For ComparisonExpression in AST"""
@@ -15,7 +16,7 @@ class ComparisonExpression(Expression):
             raise RuntimeError("The two types of the expressions in the arithmetic expression should be the same")
 
         # set the type of this expression
-        self.basetype = self.leftExpression.basetype
+        self.basetype = BooleanType()
 
     def __str__(self):
         return str(self.leftExpression) + " " + str(self.operation) + " " + str(self.rightExpression)

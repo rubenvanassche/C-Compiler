@@ -40,20 +40,21 @@ class IfelseStatement(Statement):
 
         # Compile expression and jump if needed
         code = self.expression.compile()
-        code += "fjp " + endif + "\n"
+        code += "fjp " + str(endif) + "\n"
 
-        # compile the statement to execute
-        code += self.statement.compile()
+        # compile the statement to execute if existing
+        if(self.statement != None):
+            code += self.statement.compile()
 
         # need to jump to the end of ELSE if there's an alternative
         if(self.alternativeStatement != None):
-            code += "ujp " + endelse + "\n"
+            code += "ujp " + str(endelse) + "\n"
 
         # Mark end if code
-        code += endif + ":\n"
+        code += str(endif) + ":\n"
 
         # end scope if
-        self.symboltable.closeScope()
+        self.symbolTable.closeScope()
 
         # Stop if no alternative statement
         if(self.alternativeStatement == None):
@@ -61,8 +62,8 @@ class IfelseStatement(Statement):
 
         # Compile alternative statement
         self.symbolTable.openScope()
-        code += self.alternative.compile()
-        code += endelse + ":\n"
+        code += self.alternativeStatement.compile()
+        code += str(endelse) + ":\n"
         self.symbolTable.closeScope()
 
         return code

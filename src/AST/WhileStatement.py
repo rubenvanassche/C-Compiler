@@ -16,7 +16,7 @@ class WhileStatement(Statement):
         return out
     def compile(self):
         # Check if expression is an boolean type
-        if(type(self.expression.basetype) == type(BooleanType())):
+        if(type(self.expression.basetype) != type(BooleanType())):
             raise RuntimeError("Expression in while clause should be of an boolean type")
 
         self.sym.openLoop()
@@ -25,19 +25,19 @@ class WhileStatement(Statement):
         end = self.sym.getEndLoop()
 
         # mark the begin of the WHILE statement
-        code = begin + ":\n"
+        code = str(begin) + ":\n"
 
         # compile the expression to evaluate
-        code += self.expression.compile() + "fjp" + end + "\n"
+        code += self.expression.compile() + "fjp" + str(end) + "\n"
 
         # compile the statement to execute
         code += self.statement.compile()
 
         # end with an unconditional jump to the begin
-        code += "ujp " + begin + "\n"
+        code += "ujp " + str(begin) + "\n"
 
         # mark the end of the WHILE statement
-        code += end + ":\n"
+        code += str(end) + ":\n"
 
         self.sym.closeLoop()
         return code

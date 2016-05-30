@@ -23,7 +23,7 @@ class FunctionCallExpression(Expression):
         return out
 
     def compile(self):
-        pass
+        return "Todo: function call\n"
 
     def serialize(self, level):
         out = "Call " + str(self.identifier) + "("

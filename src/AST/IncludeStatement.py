@@ -11,7 +11,7 @@ class IncludeStatement(Statement):
         return "IncludeStatement(" + self.path + ")"
 
     def compile(self):
-        return "TODO: Include"
+        return "TODO: Include\n"
 
     def serialize(self, level):
         return "Include(" + self.path + ")\n"

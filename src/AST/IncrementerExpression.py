@@ -13,7 +13,7 @@ class IncrementerExpression(Expression):
         return str(self.variable) + "++"
 
     def compile(self):
-        return ""
+        return "Todo:incrementer\n"
 
     def serialize(self, level):
         return "increment(" + self.variable.serialize(0) + ")"

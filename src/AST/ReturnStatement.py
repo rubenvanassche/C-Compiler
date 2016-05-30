@@ -11,7 +11,7 @@ class ReturnStatement(Statement):
         return "return: " + str(self.expression) + "\n"
 
     def compile(self):
-        return ""
+        return "Todo: return \n"
 
     def serialize(self, level):
         return "return(" + self.expression.serialize(0) + ")\n"

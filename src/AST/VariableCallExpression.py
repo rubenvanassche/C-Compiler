@@ -25,7 +25,7 @@ class VariableCallExpression(Expression):
         return out
 
     def compile(self):
-        pass
+        return "Todo: variable call\n"
 
     def serialize(self, level):
         out = str(self.symbol)

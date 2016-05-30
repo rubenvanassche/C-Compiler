@@ -13,7 +13,7 @@ class DecrementerExpression(Expression):
         return str(self.variable) + "--"
 
     def compile(self):
-        return ""
+        return "Todo: decrementer\n"
 
     def serialize(self, level):
         return "decrement(" + self.variable.serialize(0) + ")"
