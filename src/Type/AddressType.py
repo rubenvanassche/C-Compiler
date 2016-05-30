@@ -17,6 +17,9 @@ class AddressType(PrimitiveType):
             else:
                 return self.addressee == other.addressee
 
+    def getPcode(self):
+        return "a"
+
     def __str__(self):
         out = ""
         if(self.isConst):

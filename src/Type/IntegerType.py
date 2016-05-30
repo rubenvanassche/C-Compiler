@@ -12,5 +12,8 @@ class IntegerType(PrimitiveType):
             out += "const "
         return out + "int"
 
+    def getPcode(self):
+        return "i"
+
     def serialize(self, level):
         return "IntegerType"

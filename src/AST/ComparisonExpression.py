@@ -21,7 +21,12 @@ class ComparisonExpression(Expression):
         return str(self.leftExpression) + " " + str(self.operation) + " " + str(self.rightExpression)
 
     def compile(self):
-        return ""
+        operations = {'==' : 'equ', '!=' : 'neq', '>' : 'grt', '<' : 'les', '>=' : 'geq', '<=' : 'leq'}
+        code = self.leftExpression.compile()
+        code += self.rightExpression.compile()
+        code += operations[self.operation] + self.basetype.getPcode() + "\n"
+
+        return code
 
     def serialize(self, level):
         return self.leftExpression.serialize(0) + " " + self.operation + " " + self.rightExpression.serialize(0)

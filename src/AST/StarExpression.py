@@ -13,7 +13,7 @@ class StarExpression(Expression):
         return "Star(" + str(self.expression) + ")"
 
     def compile(self):
-        return ""
+        return "ind a\n"
 
     def serialize(self, level):
         return "star(" + self.expression.serialize(0) + ")"

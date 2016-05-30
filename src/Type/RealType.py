@@ -12,5 +12,8 @@ class RealType(PrimitiveType):
             out += "const "
         return out + "real"
 
+    def getPcode(self):
+        return "r"
+
     def serialize(self, level):
         return "RealType"

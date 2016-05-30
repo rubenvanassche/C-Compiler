@@ -61,8 +61,8 @@ class IfelseStatement(Statement):
 
         # Compile alternative statement
         self.symbolTable.openScope()
-            code += self.alternative.compile()
-            code += endelse + ":\n"
+        code += self.alternative.compile()
+        code += endelse + ":\n"
         self.symbolTable.closeScope()
 
         return code

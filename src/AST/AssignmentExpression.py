@@ -14,7 +14,7 @@ class AssignmentExpression(Expression):
         return str(self.variable) + " = " + str(self.expression) + "\n"
 
     def compile(self):
-        return self.variable.compile()
+        return "Todo: Aggisnment expression"
 
     def serialize(self, level):
         return "Assign " + self.expression.serialize(0) + " -> " + self.variable.serialize(0)

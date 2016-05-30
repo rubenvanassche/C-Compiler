@@ -12,5 +12,8 @@ class BooleanType(PrimitiveType):
             out += "const "
         return out + "bool"
 
+    def getPcode(self):
+        return "b"
+
     def serialize(self, level):
         return "BooleanType"

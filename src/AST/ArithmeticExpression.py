@@ -24,7 +24,11 @@ class ArithmeticExpression(Expression):
 
     def compile(self):
         operations = {'+' : 'add', '-' : 'sub', '/' : 'div', '*' : 'mul'}
-        return ""
+        code = self.leftExpression.compile()
+        code += self.rightExpression.compile()
+        code += operations[self.operation] + self.basetype.getPcode() + "\n"
+
+        return code
 
     def serialize(self, level):
         return self.leftExpression.serialize(0) + " " + str(self.operation) + " " + self.rightExpression.serialize(0)

@@ -17,6 +17,9 @@ class ArrayType(Type):
         else:
             return (self.basetype == other.basetype and self.size == other.size)
 
+    def getPcode(self):
+        return self.basetype.getPcode()
+
     def getElementsType(self):
         return self.basetype
 

@@ -16,7 +16,7 @@ class WhileStatement(Statement):
         return out
     def compile(self):
         # Check if expression is an boolean type
-        if(type(self.expression.basetype) == type(BooleanType()))
+        if(type(self.expression.basetype) == type(BooleanType())):
             raise RuntimeError("Expression in while clause should be of an boolean type")
 
         self.sym.openLoop()

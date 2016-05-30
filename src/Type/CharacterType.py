@@ -12,5 +12,8 @@ class CharacterType(PrimitiveType):
             out += "const "
         return out + "char"
 
+    def getPcode(self):
+        return "c"
+
     def serialize(self, level):
         return "CharacterType"

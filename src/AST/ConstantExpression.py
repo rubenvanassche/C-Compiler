@@ -43,7 +43,7 @@ class ConstantExpression(Expression):
         return "constant(" + str(self.value) + ")"
 
     def compile(self):
-        return ""
+        return self.value.compile()
 
     def serialize(self, level):
         return "value(" + str(self.value) + ")"

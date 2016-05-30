@@ -21,7 +21,12 @@ class LogicExpression(Expression):
         return str(self.leftExpression) + " " + str(self.operation) + " " + str(self.rightExpression)
 
     def compile(self):
-        return ""
+        operations = {'&&' : 'and', '||' : 'or'}
+        code = self.leftExpression.compile()
+        code += self.rightExpression.compile()
+        code += operations[self.operation] + "\n"
+
+        return code
 
     def serialize(self, level):
         return self.leftExpression.serialize(0) + " " + self.operation + " " + self.rightExpression.serialize(0)

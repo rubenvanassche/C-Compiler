@@ -13,7 +13,7 @@ class NotExpression(Expression):
         return "!" + str(self.expression)
 
     def compile(self):
-        return ""
+        return self.expression.compile() + "not\n"
 
     def serialize(self, level):
         return "!" + self.expression.serialize(0)

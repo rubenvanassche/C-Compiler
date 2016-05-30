@@ -23,7 +23,7 @@ class VariableExpression(Expression):
         return out
 
     def compile(self):
-        pass
+        return "Todo: Variable expression"
 
     def serialize(self, level):
         out = "define()" + self.basetype.serialize(0) + ":" + str(self.symbol)
