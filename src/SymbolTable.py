@@ -195,7 +195,6 @@ class SymbolTable:
         self.labels += 2
 
         self.loops.append(loop)
-        self.openScope()
 
     def closeLoop(self):
         """Close a loop"""
@@ -203,20 +202,19 @@ class SymbolTable:
             raise ScopeError("No loops opened")
 
         self.loops.pop()
-        self.closeScope()
 
     def getBeginLoop(self):
         """Get the start label of the loop"""
-        return self.loops[-1].begin
+        return "bl" + str(self.loops[-1].begin)
 
     def getEndLoop(self):
         """Get the end label of the loop"""
-        return self.loops[-1].end
+        return "el" + str(self.loops[-1].end)
 
     def createLabel(self):
         """Create a label"""
         self.labels += 1
-        return int(self.labels)
+        return "l" + str(self.labels)
 
 
     def getAllocatedSpace(self):

@@ -364,7 +364,11 @@ class ASTBuilder:
 
                 childIndex += 1
 
+        # build statement
+        self.sym.openScope()
         statement = self.buildStatement(tree.getChild(tree.getChildCount() - 1))
+        self.sym.closeScope()
+        
         return ForStatement(initExpression, checkExpression, updateExpression, statement, self.sym)
 
     def buildIfelseStatement(self, tree):
@@ -443,7 +447,12 @@ class ASTBuilder:
         if(not isinstance(token, Token) or token.type != CLexer.RPAREN):
             raise RuntimeError("Invalid IFELSE statement: '" + tree.getText() + "'")
 
-        return WhileStatement(self.buildExpression(tree.getChild(2)), self.buildStatement(tree.getChild(4)), self.sym)
+        # build the statement
+        self.sym.openScope()
+        statement = self.buildStatement(tree.getChild(4))
+        self.sym.closeScope()
+
+        return WhileStatement(self.buildExpression(tree.getChild(2)), statement, self.sym)
 
     def buildExpression(self, tree):
         """Build Expression"""

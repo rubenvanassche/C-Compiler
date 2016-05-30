@@ -1,15 +1,15 @@
 ssp 1
-1:
-fjp 2
-ujp 1
-2:
-3:
-fjp 4
+bl1:
+fjp el2
+ujp bl1
+el2:
+bl3:
+fjp el4
 Todo:incrementer
-ujp 3
-4:
-5:
-fjp 6
-ujp 5
-6:
+ujp bl3
+el4:
+bl5:
+fjp el6
+ujp bl5
+el6:
 hlt
