@@ -5,7 +5,6 @@ class Node:
 
     def __init__(self):
         """Constructor for AST Node """
-        self.sym = SymbolTable()
 
     def __str__(self):
         """String representation of AST Node"""

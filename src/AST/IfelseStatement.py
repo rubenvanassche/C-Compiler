@@ -4,19 +4,19 @@ from src.Type.BooleanType import BooleanType
 class IfelseStatement(Statement):
     """Node For IfelseStatement in AST"""
 
-    def __init__(self, expression, statement, symbolTable):
+    def __init__(self, expression, statement, sym):
         Statement.__init__(self)
         self.expression = expression
         self.statement = statement
         self.alternativeStatement = None
-        self.symbolTable = symbolTable
+        self.sym = sym
 
-    def __init__(self, expression, statement, alternativeStatement, symbolTable):
+    def __init__(self, expression, statement, alternativeStatement, sym):
         Statement.__init__(self)
         self.expression = expression
         self.statement = statement
         self.alternativeStatement = alternativeStatement
-        self.symbolTable = symbolTable
+        self.sym = sym
 
     def __str__(self):
         out =  "If(" + str(self.expression) + ")\n"
@@ -33,7 +33,7 @@ class IfelseStatement(Statement):
             raise RuntimeError("The expression in the if clause should be of an boolean type")
 
         # Open scope
-        self.symbolTable.openScope()
+        self.sym.openScope()
 
         endif = self.sym.createLabel()
         endelse = self.sym.createLabel()
@@ -54,17 +54,17 @@ class IfelseStatement(Statement):
         code += str(endif) + ":\n"
 
         # end scope if
-        self.symbolTable.closeScope()
+        self.sym.closeScope()
 
         # Stop if no alternative statement
         if(self.alternativeStatement == None):
             return code
 
         # Compile alternative statement
-        self.symbolTable.openScope()
+        self.sym.openScope()
         code += self.alternativeStatement.compile()
         code += str(endelse) + ":\n"
-        self.symbolTable.closeScope()
+        self.sym.closeScope()
 
         return code
     def serialize(self, level):

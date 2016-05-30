@@ -3,10 +3,11 @@ from src.AST.Statement import Statement
 class CompoundStatement(Statement):
     """Node For CompoundStatement in AST"""
 
-    def __init__(self, statements, usedSpace):
+    def __init__(self, statements, usedSpace, sym):
         Statement.__init__(self)
         self.statements = statements
         self.usedSpace = usedSpace
+        self.sym = sym
 
     def __str__(self):
         out = ""

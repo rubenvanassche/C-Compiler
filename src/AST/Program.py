@@ -3,9 +3,10 @@ from src.AST.Node import Node
 class Program(Node):
     """Node For Program in AST"""
 
-    def __init__(self):
+    def __init__(self, sym):
         Node.__init__(self)
         self.statements = []
+        self.sym = sym
 
     def __str__(self):
         out = ""

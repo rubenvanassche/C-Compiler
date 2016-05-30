@@ -2,3 +2,4 @@
 - Betere serialization
 - ParametersList bij call moeten types van de argumenten gecheckt worden
 - Check bij arithmetic of types wel integer of real zijn
+- Cehck bij lofic of expressions wel boolean zijn

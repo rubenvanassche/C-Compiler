@@ -70,7 +70,7 @@ class ASTBuilder:
         tree = parser.program()
 
         # Add initial program node
-        self.AST = Program()
+        self.AST = Program(self.sym)
 
 
 
@@ -197,7 +197,7 @@ class ASTBuilder:
         # Close Scope
         self.sym.closeScope()
 
-        return CompoundStatement(statements, usedSpace)
+        return CompoundStatement(statements, usedSpace, self.sym)
 
 
     def buildFunctionStatement(self, tree):
@@ -365,7 +365,7 @@ class ASTBuilder:
                 childIndex += 1
 
         statement = self.buildStatement(tree.getChild(tree.getChildCount() - 1))
-        return ForStatement(initExpression, checkExpression, updateExpression, statement)
+        return ForStatement(initExpression, checkExpression, updateExpression, statement, self.sym)
 
     def buildIfelseStatement(self, tree):
         """Build If/Else Statement"""
@@ -391,21 +391,37 @@ class ASTBuilder:
         if(tree.getChildCount() == 5):
             # Done, no else clause
             token = tree.getChild(4).getPayload()
-            if(token.getText() == ';'):
-                return IfelseStatement(self.buildExpression(tree.getChild(2)), None, None, self.sym)
-            else:
-                return IfelseStatement(self.buildExpression(tree.getChild(2)), self.buildCompoundStatement(tree.getChild(4)), None, self.sym)
+
+            # Build statement
+            statement = None
+            if(token.getText() != ';'):
+                self.sym.openScope()
+                statement = self.buildCompoundStatement(tree.getChild(4))
+                self.sym.closeScope()
+
+
+            return IfelseStatement(self.buildExpression(tree.getChild(2)), statement, None, self.sym)
 
         # we're going on with the else clause, but then we're expecting 7 children
         if (tree.getChildCount() != 7):
             raise RuntimeError("Invalid IFELSE statement: '" + tree.getText() + "'")
+
+        # Build statement
+        self.sym.openScope()
+        statement = self.buildCompoundStatement(tree.getChild(4))
+        self.sym.closeScope()
+
+        # Build alternative statement
+        self.sym.openScope()
+        alternativeStatement = self.buildCompoundStatement(tree.getChild(6))
+        self.sym.closeScope()
 
         # Check if ELSE at end
         token = tree.getChild(5).getPayload()
         if(not isinstance(token, Token) or token.type != CLexer.ELSE):
             raise RuntimeError("Invalid IFELSE statement: '" + tree.getText() + "'")
 
-        return IfelseStatement(self.buildExpression(tree.getChild(2)), self.buildCompoundStatement(tree.getChild(4)), self.buildCompoundStatement(tree.getChild(6)), self.sym)
+        return IfelseStatement(self.buildExpression(tree.getChild(2)), statement, alternativeStatement, self.sym)
 
     def buildWhileStatement(self, tree):
         """Build While Statement"""
@@ -427,7 +443,7 @@ class ASTBuilder:
         if(not isinstance(token, Token) or token.type != CLexer.RPAREN):
             raise RuntimeError("Invalid IFELSE statement: '" + tree.getText() + "'")
 
-        return WhileStatement(self.buildExpression(tree.getChild(2)), self.buildStatement(tree.getChild(4)))
+        return WhileStatement(self.buildExpression(tree.getChild(2)), self.buildStatement(tree.getChild(4)), self.sym)
 
     def buildExpression(self, tree):
         """Build Expression"""

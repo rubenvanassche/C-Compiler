@@ -4,10 +4,11 @@ from src.Type.BooleanType import BooleanType
 class WhileStatement(Statement):
     """Node For WhileStatement in AST"""
 
-    def __init__(self, expression, statement):
+    def __init__(self, expression, statement, sym):
         Statement.__init__(self)
         self.expression = expression
         self.statement = statement
+        self.sym = sym
 
     def __str__(self):
         out = "While(" + str(self.expression) + ")\n"

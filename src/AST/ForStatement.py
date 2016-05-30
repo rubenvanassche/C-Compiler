@@ -4,12 +4,13 @@ from src.Type.BooleanType import BooleanType
 class ForStatement(Statement):
     """Node For ForStatement in AST"""
 
-    def __init__(self, initExpression, checkExpression, updateExpression, statement):
+    def __init__(self, initExpression, checkExpression, updateExpression, statement, sym):
         Statement.__init__(self)
         self.initExpression = initExpression
         self.checkExpression = checkExpression
         self.updateExpression = updateExpression
         self.statement = statement
+        self.sym = sym
 
     def __str__(self):
         out = "For(" + str(self.initExpression) + ", " + str(self.checkExpression) + ", " + str(self.updateExpression) + ")\n"
@@ -25,7 +26,7 @@ class ForStatement(Statement):
         end = self.sym.getEndLoop()
 
         code = ""
-        
+
         # compile the initial expression
         if(self.initExpression != None):
             code += self.initExpression.compile()
