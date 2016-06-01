@@ -17,3 +17,6 @@ class CharacterType(PrimitiveType):
 
     def serialize(self, level):
         return "CharacterType"
+
+    def getSize(self):
+        return 1

@@ -1,22 +1,21 @@
 from src.AST.Expression import Expression
+from src.Type.ArrayType import ArrayType
 
 class VariableExpression(Expression):
     """Node For VariableExpression in AST"""
 
-    def __init__(self, basetype, symbol):
-        Expression.__init__(self, basetype)
-        self.basetype = basetype
+    def __init__(self, symbol):
+        """Create variable call with symbol(Symbol)"""
+        Expression.__init__(self, None)
+        self.basetype = symbol.basetype
         self.symbol = symbol
         self.arraySize = None
 
-    def __init__(self, basetype, symbol, arraySize):
-        Expression.__init__(self, basetype)
-        self.basetype = basetype
-        self.symbol = symbol
-        self.arraySize = arraySize
+        if(type(self.symbol) == type(ArrayType)):
+            self.arraySize = self.symbol.basetype.getElementsCount()
 
     def __str__(self):
-        out = "define " + str(self.basetype) + ":" + str(self.symbol)
+        out = "define " + str(self.basetype) + ":" + str(self.symbol.identifier)
         if(self.arraySize != None):
             out += "[" + str(self.arraySize) + "]"
         out += "\n"
@@ -26,7 +25,7 @@ class VariableExpression(Expression):
         return "Todo: Variable expression\n"
 
     def serialize(self, level):
-        out = "define()" + self.basetype.serialize(0) + ":" + str(self.symbol)
+        out = "define()" + self.basetype.serialize(0) + ":" + str(self.symbol.identifier)
         if(self.arraySize != None):
             out += "[" + str(self.arraySize) + "]"
         out += ")\n"

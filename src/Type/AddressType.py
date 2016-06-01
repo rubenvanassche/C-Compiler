@@ -20,6 +20,9 @@ class AddressType(PrimitiveType):
     def getPcode(self):
         return "a"
 
+    def getSize(self):
+        return 1
+
     def __str__(self):
         out = ""
         if(self.isConst):

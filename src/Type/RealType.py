@@ -17,3 +17,6 @@ class RealType(PrimitiveType):
 
     def serialize(self, level):
         return "RealType"
+        
+    def getSize(self):
+        return 1

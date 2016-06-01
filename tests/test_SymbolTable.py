@@ -290,5 +290,49 @@ class TestUM(unittest.TestCase):
         self.assertEqual(type(st.getFunction('multiply', parametersList)), Function)
         self.assertRaises(FunctionNotRegisteredError, lambda:st.getFunction('multiplynotexisting', parametersList) )
         st.closeScope
+
+    def test_function_label(self):
+        st = SymbolTable()
+        integer = IntegerType()
+        real = RealType()
+        boolean = BooleanType()
+        character = CharacterType()
+
+        # Create arguments
+        argumentsList = ArgumentsList()
+        argumentsList.add(Argument('a', integer))
+        argumentsList.add(Argument('b', real))
+
+        # Create parameters
+        parametersList = ParametersList()
+        parametersList.add(Parameter(ConstantExpression(1, 'int')))
+        parametersList.add(Parameter(ConstantExpression(3.14, 'float')))
+
+        # Register basic function, no arguments
+        st.registerFunction('add', integer, argumentsList, 0)
+
+        # Check for label
+        self.assertEqual(st.getFunction('add', parametersList).label, 'add0')
+
+        # Check for label in scope
+        st.openScope()
+        st.registerFunction('add', integer, argumentsList, 0)
+        self.assertEqual(st.getFunction('add', parametersList).label, 'add1')
+        st.closeScope()
+
+    def test_function_parameter_size(self):
+        st = SymbolTable()
+        integer = IntegerType()
+        arrayinteger = ArrayType(integer, 3)
+
+        # Create arguments
+        argumentsList = ArgumentsList()
+        argumentsList.add(Argument('a', integer))
+        argumentsList.add(Argument('b', arrayinteger))
+
+        # Register basic function, no arguments
+        st.registerFunction('add', integer, argumentsList, 0)
+        st.getFunction('add')
+
 if __name__ == '__main__':
     unittest.main()

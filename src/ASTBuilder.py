@@ -368,7 +368,7 @@ class ASTBuilder:
         self.sym.openScope()
         statement = self.buildStatement(tree.getChild(tree.getChildCount() - 1))
         self.sym.closeScope()
-        
+
         return ForStatement(initExpression, checkExpression, updateExpression, statement, self.sym)
 
     def buildIfelseStatement(self, tree):
@@ -731,19 +731,18 @@ class ASTBuilder:
         """Build Variable Expression"""
         if(tree.getChildCount() == 1):
             # Variable call
-            symbol = tree.getChild(0).getText()
+            identifier = tree.getChild(0).getText()
             # Check symbol Table if symbol exists
-            variable = self.sym.getSymbol(symbol)
+            symbol = self.sym.getSymbol(identifier)
 
-            return VariableCallExpression(symbol, variable.basetype,  None)
+            return VariableCallExpression(symbol, None)
         elif(tree.getChildCount() == 2):
             # Variable Definition
             basetype = self.buildType(tree.getChild(0))
-            symbol = tree.getChild(1).getText()
+            identifier = tree.getChild(1).getText()
             # Register in Symbol Table
-            self.sym.registerSymbol(symbol, basetype)
-
-            return VariableExpression(basetype, symbol, None)
+            symbol = self.sym.registerSymbol(identifier, basetype)
+            return VariableExpression(symbol)
         elif(tree.getChildCount() == 4):
             # Array
             token = tree.getChild(1).getPayload()
@@ -756,21 +755,47 @@ class ASTBuilder:
 
             if(tree.getChild(0).getChildCount() == 1):
                 # call
-                symbol = tree.getChild(0).getChild(0).getText()
+                identifier = tree.getChild(0).getChild(0).getText()
                 index = self.buildExpression(tree.getChild(2))
 
-                # Check symbol Table if symbol exists
-                variable = self.sym.getSymbol(symbol)
+                # index can only be an int
+                if(type(index.basetype) != type(IntegerType())):
+                    raise RuntimeError("Array index can only be defined by an int")
 
-                return VariableCallExpression(symbol, variable.basetype, index)
+                # get the value of the integer from the constantexpression
+                index = index.value.integer
+
+                # Check symbol Table if symbol exists
+                symbol = self.sym.getSymbol(identifier)
+
+                # Check if variable is an array
+                if(symbol.basetype.isArray() == False):
+                    raise RuntimeError("Tried to get an array which is not an array")
+
+                # check if index is not out ofbounds
+                if(symbol.basetype.getElementsCount() <= index):
+                    raise RuntimeError("Index of array is out of bounds")
+
+                return VariableCallExpression(symbol, index)
             elif(tree.getChild(0).getChildCount() == 2):
                 # definition
                 basetype = self.buildType(tree.getChild(0).getChild(0))
-                symbol = tree.getChild(0).getChild(1).getText()
+                identifier = tree.getChild(0).getChild(1).getText()
                 arraySize = self.buildExpression(tree.getChild(2))
+
+                # Arraysize can only be an int
+                if(type(arraySize.basetype) != type(IntegerType())):
+                    raise RuntimeError("Array size can only be defined by an int")
+
+                # get the value of the integer from the constantexpression
+                arraySize = arraySize.value.integer
+
+                # Create the arrayType
+                arrayType = ArrayType(basetype, arraySize)
+
                 # Register in Symbol Table
-                self.sym.registerSymbol(symbol, basetype)
-                return VariableExpression(basetype, symbol, arraySize)
+                symbol = self.sym.registerSymbol(identifier, arrayType)
+                return VariableExpression(symbol)
             else:
                 raise RuntimeError("Invalid VariableExpression: '" + tree.getText() + "'")
         else:

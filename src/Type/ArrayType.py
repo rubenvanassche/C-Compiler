@@ -28,3 +28,9 @@ class ArrayType(Type):
 
     def serialize(self, level):
         return "ArrayType"
+
+    def getSize(self):
+        return self.size*self.basetype.getSize()
+
+    def isArray(self):
+        return True

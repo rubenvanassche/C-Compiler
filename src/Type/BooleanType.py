@@ -17,3 +17,6 @@ class BooleanType(PrimitiveType):
 
     def serialize(self, level):
         return "BooleanType"
+
+    def getSize(self):
+        return 1

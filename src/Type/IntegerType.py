@@ -17,3 +17,6 @@ class IntegerType(PrimitiveType):
 
     def serialize(self, level):
         return "IntegerType"
+
+    def getSize(self):
+        return 1

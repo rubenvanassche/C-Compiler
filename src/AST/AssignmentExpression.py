@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.Type.ArrayType import ArrayType
 
 class AssignmentExpression(Expression):
     """Node For AssignmentExpression in AST"""
@@ -14,7 +15,32 @@ class AssignmentExpression(Expression):
         return str(self.variable) + " = " + str(self.expression) + "\n"
 
     def compile(self):
-        return "Todo: Aggisnment expression\n"
+        # Check if types are the same
+        if(self.expression.basetype != self.variable.basetype):
+            # Check if it is an ArrayType
+            if(self.expression.basetype.isArray() and self.variable.basetype.isArray()):
+                # int a[3] = b[3]
+                if(self.expression.basetype.basetype != self.variable.basetype.basetype):
+                    raise RuntimeError("Tried to assign two different types")
+            elif(self.expression.basetype.isArray() or self.variable.basetype.isArray()):
+                if(self.expression.basetype.isArray()):
+                    # int a = c[3]
+                    if(self.expression.basetype.basetype != self.variable.basetype):
+                        raise RuntimeError("Tried to assign two different types")
+                elif(self.variable.basetype.isArray()):
+                    # int c[3] = a
+                    if(self.expression.basetype != self.variable.basetype.basetype):
+                        raise RuntimeError("Tried to assign two different types")
+                else:
+                    raise RuntimeError("Unknown fault #1")
+            else:
+                raise RuntimeError("Tried to assign two different types")
+
+        code = "ldc a " + str(self.variable.symbol.address) + "\n"
+        code += self.expression.compile()
+        code += "sto " + self.basetype.getPcode() + "\n"
+
+        return code
 
     def serialize(self, level):
         return "Assign " + self.expression.serialize(0) + " -> " + self.variable.serialize(0)

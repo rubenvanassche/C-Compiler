@@ -71,7 +71,7 @@ class Scope:
 class Symbol:
     """Representation of a Symbol"""
     def __init__(self, identifier, basetype, address):
-        """Initialize with an identifier(string), basetype(Type) and adress(int)"""
+        """Initialize with an identifier(string), basetype(Type) and array(bool)"""
         self.identifier = identifier
         self.basetype = basetype
         self.address = address
@@ -85,13 +85,28 @@ class Alias:
 
 class Function:
     """Representation of a Function"""
-    def __init__(self, identifier, returntype, arguments, address):
+    def __init__(self, identifier, returntype, arguments, address, label):
         """Initialize with an identifier(string), returnType(Type), argument(argumentList) and adress(int)"""
         self.identifier = identifier
         self.returntype = returntype
         self.arguments = arguments
         self.address = address
+        self.label = label
 
+    def getStaticSize():
+        """Get the static size required for the SSP command"""
+        size = 5
+
+        return size
+
+    def getParameterSize():
+        """Get the parameter size required for the cup command"""
+        size = 0
+
+        for argument in self.arguments.arguments:
+            size += argument.basetype.getSize()
+
+        return size
 class Loop:
     """Representation of a Loop"""
     def __init__(self, begin, end):
@@ -109,6 +124,7 @@ class SymbolTable:
         self.aliases = []
         self.loops = []
         self.labels = 0
+        self.functionLabels = {}
 
         # Open the global scope
         self.scopes.append(Scope(0))
@@ -126,7 +142,7 @@ class SymbolTable:
         self.scopes.pop()
 
     def registerSymbol(self, identifier, basetype):
-        """Register a Symbol in the current scope with an identifier(string) and basetype(Type)"""
+        """Register a Symbol in the current scope with an identifier(string) and basetype(Type) is an array(bool)"""
         if(self.scopes[-1].isContainingSymbol(identifier)):
             raise SymbolAlreadyRegisteredError("Symbol '"+ identifier +"' already registered in scope")
 
@@ -138,6 +154,8 @@ class SymbolTable:
 
         # raise the allocated count
         self.scopes[-1].allocated += basetype.getSize()
+
+        return symbol
 
     def registerAlias(self, identifier, basetype):
         """Register an Alias in the current scope with an identifier(string) and basetype(Type)"""
@@ -151,7 +169,9 @@ class SymbolTable:
         if(self.scopes[-1].isContainingFunction(identifier, arguments)):
             raise FunctionAlreadyRegisteredError("Function '"+ identifier +"' already registered in scope")
 
-        self.scopes[-1].addFunction(Function(identifier, returntype, arguments, address))
+        #get a label
+        label = self.createFunctionLabel(identifier)
+        self.scopes[-1].addFunction(Function(identifier, returntype, arguments, address, label))
 
     def registerArguments(self, arguments):
         """Register the symbols in an arguments(ArgumentsList)"""
@@ -216,6 +236,14 @@ class SymbolTable:
         self.labels += 1
         return "l" + str(self.labels)
 
+    def createFunctionLabel(self, name):
+        """Create a label for a function with given name"""
+        if name in self.functionLabels:
+            self.functionLabels[name] += 1
+        else:
+            self.functionLabels[name] = 0
+
+        return name + str(self.functionLabels[name])
 
     def getAllocatedSpace(self):
         """Get the size of the address space in use"""

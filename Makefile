@@ -21,6 +21,7 @@ test:
 
 testold:
 	python3 Compiler.py testfiles/ast/arithmetic.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/array.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/assignment.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/compoundstatement.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/const.c -showast -o testoutput

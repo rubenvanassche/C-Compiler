@@ -3,22 +3,22 @@ from src.AST.Expression import Expression
 class VariableCallExpression(Expression):
     """Node For VariableCallExpression in AST"""
 
-    def __init__(self, symbol, returntype):
+    def __init__(self, symbol):
+        """Call variable call with symbol(Symbol)"""
         Expression.__init__(self, None)
         self.symbol = symbol
         self.index = None
+        self.basetype = symbol.basetype
 
-        self.basetype = returntype
-
-    def __init__(self, symbol, returntype,  index):
+    def __init__(self, symbol, index):
+        """Call variable call with symbol(Symbol) and index(int)"""
         Expression.__init__(self, None)
         self.symbol = symbol
         self.index = index
-
-        self.basetype = returntype
+        self.basetype = symbol.basetype
 
     def __str__(self):
-        out = "Call " + str(self.symbol)
+        out = "Call " + str(self.symbol.identifier)
         if(self.index != None):
             out += "[" + str(self.index) + "]"
         out += "\n"
@@ -28,7 +28,7 @@ class VariableCallExpression(Expression):
         return "Todo: variable call\n"
 
     def serialize(self, level):
-        out = str(self.symbol)
+        out = str(self.symbol.identifier)
         if(self.index != None):
             out += "[" + str(self.index) + "]"
         return out

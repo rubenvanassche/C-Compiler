@@ -27,6 +27,10 @@ class Type:
         """serialize Type"""
         return "BaseType"
 
+    def isArray(self):
+        """Returns true if type is an array"""
+        return False
+
     def __str__(self):
         """String representation"""
         return "BaseType"
