@@ -1,15 +1,23 @@
 from src.Type.IntegerType import IntegerType
 from src.Exceptions.SymbolTable import *
+from src.utils import *
 
 class Scope:
     """An Scope in the program"""
-    def __init__(self, allocated):
+    def __init__(self, parentScope):
         """Initializer with allocated(int) which represents from where in the memory the scope can start allocating"""
-
-        self.allocated = allocated
+        self.parentScope = parentScope
+        self.allocated = 0
         self.symbols = []
         self.aliases = []
         self.functions = []
+        self.scopes = []
+
+    def openScope(self):
+        newScope = Scope(self)
+        self.scopes.append(newScope)
+
+        return self.scopes[-1]
 
     def addSymbol(self, symbol):
         """Add a Symbol to the Scope"""
@@ -68,6 +76,26 @@ class Scope:
 
         return None
 
+    def printer(self, level):
+        output = padding(level) + "||SCOPE(" + str(self.allocated) + ")\n"
+
+        # Symbols
+        for symbol in self.symbols:
+            output += padding(level) + "-> Symbol(" + symbol.identifier + ") : " + str(symbol.basetype) + "\n"
+
+        # Aliases
+        for alias in self.aliases:
+            output += padding(level) + "-> Alias(" + alias.identifier + ") : " + str(alias.basetype) + "\n"
+
+        # functions
+        for function in self.functions:
+            output += padding(level) + "-> Function: " + function.identifier + "(" + str(function.arguments) + ") :  " + str(function.returntype) + "\n"
+
+        for scope in self.scopes:
+            output += scope.printer(level + 1)
+
+        return output
+
 class Symbol:
     """Representation of a Symbol"""
     def __init__(self, identifier, basetype, address):
@@ -120,58 +148,58 @@ class SymbolTable:
 
     def __init__(self):
         """Initializer, will also open the global scope"""
-        self.scopes = []
-        self.aliases = []
+        self.table = None
+        self.scope = None
         self.loops = []
         self.labels = 0
         self.functionLabels = {}
 
         # Open the global scope
-        self.scopes.append(Scope(0))
+        self.table = Scope(None)
+        self.scope = self.table
 
     def openScope(self):
         """Open a scope"""
-        newScope = Scope(self.scopes[-1].getAllocated())
-        self.scopes.append(newScope)
+        self.scope = self.scope.openScope()
 
     def closeScope(self):
         """Close Scope"""
-        if(len(self.scopes) == 1):
+        if(self.scope.parentScope == None):
             raise ScopeError("No scope opened previously")
 
-        self.scopes.pop()
+        self.scope = self.scope.parentScope
 
     def registerSymbol(self, identifier, basetype):
         """Register a Symbol in the current scope with an identifier(string) and basetype(Type) is an array(bool)"""
-        if(self.scopes[-1].isContainingSymbol(identifier)):
+        if(self.scope.isContainingSymbol(identifier)):
             raise SymbolAlreadyRegisteredError("Symbol '"+ identifier +"' already registered in scope")
 
         if(basetype.getSize() == 0):
             raise TypeError("Type should have a size greater then 0")
 
-        symbol = Symbol(identifier, basetype, self.scopes[-1].getAllocated())
-        self.scopes[-1].addSymbol(symbol)
+        symbol = Symbol(identifier, basetype, self.scope.getAllocated())
+        self.scope.addSymbol(symbol)
 
         # raise the allocated count
-        self.scopes[-1].allocated += basetype.getSize()
+        self.scope.allocated += basetype.getSize()
 
         return symbol
 
     def registerAlias(self, identifier, basetype):
         """Register an Alias in the current scope with an identifier(string) and basetype(Type)"""
-        if(self.scopes[-1].isContainingAlias(identifier)):
+        if(self.scope.isContainingAlias(identifier)):
             raise AliasAlreadyRegisteredError("Alias '"+ identifier +"' already registered in scope")
 
-        self.scopes[-1].addAlias(Alias(identifier, basetype))
+        self.scope.addAlias(Alias(identifier, basetype))
 
     def registerFunction(self, identifier, returntype, arguments, address):
         """Register a Function in the current scope with an identifier(string), returntype(Type), arguments(ArgumentsList) and address(int)"""
-        if(self.scopes[-1].isContainingFunction(identifier, arguments)):
+        if(self.scope.isContainingFunction(identifier, arguments)):
             raise FunctionAlreadyRegisteredError("Function '"+ identifier +"' already registered in scope")
 
         #get a label
         label = self.createFunctionLabel(identifier)
-        self.scopes[-1].addFunction(Function(identifier, returntype, arguments, address, label))
+        self.scope.addFunction(Function(identifier, returntype, arguments, address, label))
 
     def registerArguments(self, arguments):
         """Register the symbols in an arguments(ArgumentsList)"""
@@ -180,32 +208,53 @@ class SymbolTable:
 
     def getSymbol(self, identifier):
         """Get a symbol from the Symbol Table with an identifier(string)"""
-        for scope in reversed(self.scopes):
-            symbol = scope.getSymbol(identifier)
+        searchScope = self.scope
+
+        while(True):
+            symbol = searchScope.getSymbol(identifier)
 
             if(symbol != None):
                 return symbol
+            else:
+                searchScope = searchScope.parentScope
+                if(searchScope == None):
+                    # Stop in main scope
+                    break
 
         raise SymbolNotRegisteredError("Symbol '"+ identifier +"' not registered")
 
     def getAlias(self, identifier):
         """Get an alias from the Symbol Table with an identifier(string)"""
-        for scope in reversed(self.scopes):
-            alias = scope.getAlias(identifier)
+        searchScope = self.scope
+
+        while(True):
+            alias = searchScope.getAlias(identifier)
 
             if(alias != None):
                 return alias
+            else:
+                searchScope = searchScope.parentScope
+                if(searchScope == None):
+                    # Stop in main scope
+                    break
 
         raise AliasNotRegisteredError("Alias '"+ identifier +"' not registered")
 
     # Parameters is [] and not ParametersList
     def getFunction(self, identifier, parameters):
         """Get a function from the Symbol Table with an identifier(string) and parameters(ParametersList)"""
-        for scope in reversed(self.scopes):
-            function = scope.getFunction(identifier, parameters)
+        searchScope = self.scope
+
+        while(True):
+            function = searchScope.getFunction(identifier, parameters)
 
             if(function != None):
                 return function
+            else:
+                searchScope = searchScope.parentScope
+                if(searchScope == None):
+                    # Stop in main scope
+                    break
 
         raise FunctionNotRegisteredError("Function '"+ identifier +"' not registered")
 
@@ -247,7 +296,7 @@ class SymbolTable:
 
     def getAllocatedSpace(self):
         """Get the size of the address space in use"""
-        return self.scopes[-1].allocated
+        return self.scope.allocated
 
     def __str__(self):
         """String Representation"""
