@@ -18,9 +18,12 @@ class FunctionStatement(Statement):
         return out
 
     def compile(self):
-        code = "TODO- Function statement\n"
+        code = self.function.label + ":\n"
+        code += "ssp " + str(self.function.getStaticSize()) + "\n"
         for statement in self.statements:
             code += statement.compile()
+
+        code += "retp\n"
 
         return code
 

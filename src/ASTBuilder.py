@@ -852,7 +852,7 @@ class ASTBuilder:
         # Check symbol table
         function = self.sym.getFunction(identifier, parameters)
 
-        return FunctionCallExpression(identifier, function.returntype, parameters)
+        return FunctionCallExpression(function, parameters)
 
     def buildType(self, tree):
         """Build Type"""
