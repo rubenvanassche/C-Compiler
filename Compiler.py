@@ -23,6 +23,9 @@ def main(argv):
     astBuilder = ASTBuilder(args["file"], symboltable)
     ast = astBuilder.build()
 
+    print("------SYMBOL-------")
+    print(symboltable.scope.printer(0))
+    print("------SYMBOL-------")
 
     if(bool(args["nocompile"]) == False):
         compiled = ast.compile()

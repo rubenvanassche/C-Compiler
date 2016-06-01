@@ -121,7 +121,38 @@ class TestUM(unittest.TestCase):
         self.assertRaises(SymbolAlreadyRegisteredError, lambda: st.registerSymbol('integer', integer))
 
     def test_scope_allocated(self):
-        st = Symboltable()
+        st = SymbolTable()
+
+        integer = IntegerType()
+        real = RealType()
+        boolean = BooleanType()
+        character = CharacterType()
+        address = AddressType(integer)
+
+        array = ArrayType(integer, 10)
+
+        st.registerSymbol('a', integer)
+        st.registerSymbol('b', real)
+        st.registerSymbol('c', boolean)
+        st.registerSymbol('d', character)
+        st.registerSymbol('e', address)
+
+        self.assertEqual(st.scope.allocated, 5)
+
+        st.openScope()
+        st.registerSymbol('a', integer)
+        st.registerSymbol('b', real)
+        st.registerSymbol('c', boolean)
+        st.registerSymbol('d', character)
+        st.registerSymbol('e', address)
+
+        self.assertEqual(st.scope.allocated, 5)
+        st.closeScope()
+
+        self.assertEqual(st.scope.allocated, 5)
+        st.registerSymbol('f', array)
+
+        self.assertEqual(st.scope.allocated, 15)
 
     def test_not_registered_symbol_call(self):
         st = SymbolTable()
@@ -163,21 +194,21 @@ class TestUM(unittest.TestCase):
         st.registerAlias('a', integer)
 
         # call in scope
-        self.assertEqual(type(st.getSymbol('a').basetype), IntegerType)
+        self.assertEqual(type(st.getAlias('a').basetype), type(IntegerType()))
 
         # call in nested scope
         st.openScope()
-        self.assertEqual(type(st.getSymbol('a').basetype), IntegerType)
+        self.assertEqual(type(st.getAlias('a').basetype), type(IntegerType()))
 
         # define in nested scope
-        st.registerSymbol('a', character)
+        st.registerAlias('a', character)
 
         # call in nested scope
-        self.assertEqual(type(st.getSymbol('a').basetype), CharacterType)
+        self.assertEqual(type(st.getAlias('a').basetype), type(CharacterType()))
 
         # call original in main scope
         st.closeScope()
-        self.assertEqual(type(st.getSymbol('a').basetype), IntegerType)
+        self.assertEqual(type(st.getAlias('a').basetype), type(IntegerType()))
 
     def test_function_register_and_get_no_arguments(self):
         st = SymbolTable()
