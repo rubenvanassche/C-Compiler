@@ -30,7 +30,8 @@ class VariableCallExpression(Expression):
         return out
 
     def compile(self):
-        return "Todo: variable call\n"
+        code = "lod " + str(self.symbol.basetype.getPcode()) + " 0 " + str(self.symbol.address) + "\n"
+        return code
 
     def serialize(self, level):
         if(self.index == None):

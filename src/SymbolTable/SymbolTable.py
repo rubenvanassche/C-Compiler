@@ -38,6 +38,7 @@ class SymbolTable:
         self.scope = self.scope.openScope()
 
         #Register the symbols in an arguments(ArgumentsList)
+        addressCounter = 5
         for argument in function.arguments.arguments:
             if(self.scope.isContainingSymbol(argument.identifier)):
                 raise SymbolAlreadyRegisteredError("Symbol '"+ argument.identifier +"' already registered in scope")
@@ -45,8 +46,12 @@ class SymbolTable:
             if(argument.basetype.getSize() == 0):
                 raise TypeError("Type should have a size greater then 0")
 
-            symbol = Symbol(argument.identifier, argument.basetype, self.scope.getAllocated())
+            symbol = Symbol(argument.identifier, argument.basetype, addressCounter)
+
             self.scope.addSymbol(symbol)
+
+            # Raise address counter
+            addressCounter += argument.basetype.getSize()
 
 
     def closeScope(self):

@@ -23,7 +23,8 @@ class VariableExpression(Expression):
         return out
 
     def compile(self):
-        return "Todo: Variable expression\n"
+        code = "lod " + str(self.symbol.basetype.getPcode()) + " 0 " + str(self.symbol.address) + "\n"
+        return code
 
     def serialize(self, level):
         out = padding(level) + "VariableExpression(" + self.symbol.identifier +")\n"

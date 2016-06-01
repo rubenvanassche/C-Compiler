@@ -456,6 +456,8 @@ class TestUM(unittest.TestCase):
         function = st.getFunction('main', parametersList)
 
         st.openFunctionScope(function)
+        self.assertEqual(st.getSymbol('a').address, 5)
+        self.assertEqual(st.getSymbol('b').address, 6)
         st.registerSymbol('c', integer)
         self.assertEqual(st.getSymbol('c').address, 9)
         st.registerSymbol('d', arrayinteger)

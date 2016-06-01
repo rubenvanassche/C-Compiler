@@ -37,9 +37,9 @@ class AssignmentExpression(Expression):
             else:
                 raise RuntimeError("Tried to assign two different types")
 
-        code = "ldc a " + str(self.variable.symbol.address) + "\n"
-        code += self.expression.compile()
-        code += "sto " + self.basetype.getPcode() + "\n"
+
+        code = self.expression.compile()
+        code += "str " + str(self.variable.symbol.basetype.getPcode()) + " " + str(self.variable.symbol.address) + "\n"
 
         return code
 

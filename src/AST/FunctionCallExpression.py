@@ -17,6 +17,11 @@ class FunctionCallExpression(Expression):
 
     def compile(self):
         code = "mst 0\n"
+
+        # Load parameters
+        for parameter in self.parameters:
+            code += # TODO parameter compilation
+
         code += "cup " + str(self.function.getParameterSize()) + " " + self.function.label + "\n"
 
         return code
