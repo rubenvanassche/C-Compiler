@@ -138,6 +138,7 @@ class TestUM(unittest.TestCase):
         st.registerSymbol('e', address)
 
         self.assertEqual(st.scope.allocated, 5)
+        self.assertEqual(st.scope.getTotalAllocated(), 5)
 
         st.openScope()
         st.registerSymbol('a', integer)
@@ -147,12 +148,15 @@ class TestUM(unittest.TestCase):
         st.registerSymbol('e', address)
 
         self.assertEqual(st.scope.allocated, 5)
+        self.assertEqual(st.scope.getTotalAllocated(), 5)
         st.closeScope()
 
         self.assertEqual(st.scope.allocated, 5)
+        self.assertEqual(st.scope.getTotalAllocated(), 10)
         st.registerSymbol('f', array)
 
         self.assertEqual(st.scope.allocated, 15)
+        self.assertEqual(st.scope.getTotalAllocated(), 20)
 
     def test_not_registered_symbol_call(self):
         st = SymbolTable()

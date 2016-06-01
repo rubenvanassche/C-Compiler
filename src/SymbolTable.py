@@ -32,8 +32,17 @@ class Scope:
         self.functions.append(function)
 
     def getAllocated(self):
-        """Returns from where this scope can start allocating"""
+        """Returns how many memory was allocated in this scope"""
         return self.allocated
+
+    def getTotalAllocated(self):
+        """Return how many memory was allocated in this scope and it's childs scopes"""
+        output = self.allocated
+
+        for scope in self.scopes:
+            output += scope.getTotalAllocated()
+
+        return output
 
     def isContainingSymbol(self, identifier):
         """Returns true if the scope has the symbol"""
@@ -113,12 +122,12 @@ class Alias:
 
 class Function:
     """Representation of a Function"""
-    def __init__(self, identifier, returntype, arguments, address, label):
-        """Initialize with an identifier(string), returnType(Type), argument(argumentList) and adress(int)"""
+    def __init__(self, identifier, returntype, arguments, staticsize, label):
+        """Initialize with an identifier(string), returnType(Type), argument(argumentList), staticsize(int) and label(string)"""
         self.identifier = identifier
         self.returntype = returntype
         self.arguments = arguments
-        self.address = address
+        self.staticsize = staticsize
         self.label = label
 
     def getStaticSize(self):
@@ -190,16 +199,24 @@ class SymbolTable:
         if(self.scope.isContainingAlias(identifier)):
             raise AliasAlreadyRegisteredError("Alias '"+ identifier +"' already registered in scope")
 
-        self.scope.addAlias(Alias(identifier, basetype))
+        alias = Alias(identifier, basetype)
+        self.scope.addAlias(alias)
 
-    def registerFunction(self, identifier, returntype, arguments, address):
-        """Register a Function in the current scope with an identifier(string), returntype(Type), arguments(ArgumentsList) and address(int)"""
+        return alias
+
+    def registerFunction(self, identifier, returntype, arguments, staticsize):
+        """Register a Function in the current scope with an identifier(string), returntype(Type), arguments(ArgumentsList) and staticsize(int)"""
         if(self.scope.isContainingFunction(identifier, arguments)):
             raise FunctionAlreadyRegisteredError("Function '"+ identifier +"' already registered in scope")
 
         #get a label
         label = self.createFunctionLabel(identifier)
-        self.scope.addFunction(Function(identifier, returntype, arguments, address, label))
+
+        function = Function(identifier, returntype, arguments, staticsize, label)
+
+        self.scope.addFunction(function)
+
+        return function
 
     def registerArguments(self, arguments):
         """Register the symbols in an arguments(ArgumentsList)"""

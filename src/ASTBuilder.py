@@ -257,7 +257,7 @@ class ASTBuilder:
             raise RuntimeError("Invalid function statement: '" + tree.getText() + "'")
 
         # Register function in symbol table and open scope
-        self.sym.registerFunction(identifier, returntype, arguments, 0)
+        function = self.sym.registerFunction(identifier, returntype, arguments, 0)
         self.sym.openScope()
         self.sym.registerArguments(arguments)
 
@@ -284,10 +284,13 @@ class ASTBuilder:
             else:
                 raise RuntimeError("Invalid function statement: '" + tree.getText() + "'")
 
+        # Save the static data size to the function object
+        function.staticsize = self.sym.scope.getTotalAllocated()
+
         # close scope
         self.sym.closeScope()
 
-        return FunctionStatement(returntype, identifier, arguments, statements)
+        return FunctionStatement(function, statements)
 
     def buildTypeDefStatement(self, tree):
         """Build Typedef Statement"""
