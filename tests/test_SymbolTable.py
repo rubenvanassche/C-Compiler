@@ -1,6 +1,7 @@
 import unittest
 from src.SymbolTable.SymbolTable import SymbolTable
 from src.SymbolTable.Function import Function
+from src.SymbolTable.Symbol import Symbol
 from src.Exceptions.SymbolTable import *
 
 from src.Type.IntegerType import IntegerType
@@ -406,6 +407,67 @@ class TestUM(unittest.TestCase):
         function = st.getFunction('add', parametersList)
 
         self.assertEqual(function.getParameterSize(), 4)
+
+    def test_symbol_address_in_function(self):
+        st = SymbolTable()
+
+        integer = IntegerType()
+        arrayinteger = ArrayType(integer, 3)
+
+        # Create arguments
+        argumentsList = ArgumentsList()
+
+        # Create parameters
+        parametersList = ParametersList()
+
+        st.registerFunction('main', integer, argumentsList, 0)
+        function = st.getFunction('main', parametersList)
+
+        st.openFunctionScope(function)
+        st.registerSymbol('a', integer)
+        self.assertEqual(st.getSymbol('a').address, 5)
+        st.registerSymbol('b', arrayinteger)
+        self.assertEqual(st.getSymbol('b').address, 6)
+        st.registerSymbol('c', integer)
+        self.assertEqual(st.getSymbol('c').address, 9)
+        st.closeFunctionScope(function)
+
+
+        self.assertEqual(function.getStaticSize(), 10)
+        self.assertEqual(function.getParameterSize(), 0)
+
+    def test_symbol_address_in_function_with_arguments(self):
+        st = SymbolTable()
+
+        integer = IntegerType()
+        arrayinteger = ArrayType(integer, 3)
+
+        # Create arguments
+        argumentsList = ArgumentsList()
+        argumentsList.add(Argument('a', integer))
+        argumentsList.add(Argument('b', arrayinteger))
+
+        # Create parameters
+        parametersList = ParametersList()
+        parametersList.add(Parameter(ConstantExpression(1, 'int')))
+        parametersList.add(Parameter(VariableCallExpression(Symbol('b', arrayinteger, 0), None)))
+
+        st.registerFunction('main', integer, argumentsList, 0)
+        function = st.getFunction('main', parametersList)
+
+        st.openFunctionScope(function)
+        st.registerSymbol('c', integer)
+        self.assertEqual(st.getSymbol('c').address, 9)
+        st.registerSymbol('d', arrayinteger)
+        self.assertEqual(st.getSymbol('d').address, 10)
+        st.registerSymbol('e', integer)
+        self.assertEqual(st.getSymbol('e').address, 13)
+        st.closeFunctionScope(function)
+
+
+        self.assertEqual(function.getStaticSize(), 10)
+        self.assertEqual(function.getParameterSize(), 4)
+
 
 
 if __name__ == '__main__':

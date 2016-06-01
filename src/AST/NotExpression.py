@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.utils import *
 
 class NotExpression(Expression):
     """Node For NotExpression in AST"""
@@ -16,4 +17,7 @@ class NotExpression(Expression):
         return self.expression.compile() + "not\n"
 
     def serialize(self, level):
-        return "!" + self.expression.serialize(0)
+        out = padding(level) + "NotExpression\n"
+        out += self.expression.serialize(level + 1)
+
+        return out

@@ -1,4 +1,5 @@
 from src.AST.Statement import Statement
+from src.utils import *
 
 class TypedefStatement(Statement):
     """Node For TypedefStatement in AST"""
@@ -15,4 +16,7 @@ class TypedefStatement(Statement):
         return "Todo: TYpedef\n"
 
     def serialize(self, level):
-        return "Typedef " + self.basetype.serialize(0) + " -> " + str(self.identifier) + "\n"
+        out = padding(level) + "Typedef(" + self.identifier + ")\n"
+        out += self.basetype.serialize(level + 1)
+
+        return out

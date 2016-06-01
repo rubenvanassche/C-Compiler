@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.utils import *
 
 class ArithmeticExpression(Expression):
     """Node For ArithmeticExpression in AST"""

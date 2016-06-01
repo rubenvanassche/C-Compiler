@@ -1,5 +1,6 @@
 from src.AST.Statement import Statement
 from src.Type.BooleanType import BooleanType
+from src.utils import *
 
 class ForStatement(Statement):
     """Node For ForStatement in AST"""
@@ -59,7 +60,14 @@ class ForStatement(Statement):
 
 
     def serialize(self, level):
-        out = "For(" + self.initExpression.serialize(0) + ", " + self.checkExpression.serialize(0) + ", " + self.updateExpression.serialize(0) + ")\n"
-        out += self.s(level) + self.statement(level + 1)
+        out = padding(level) + "ForStatement\n"
+        if(self.initExpression != None):
+            out += padding(level + 1) + "->init: \n" + self.initExpression.serialize(level + 1) + "\n"
+        if(self.checkExpression != None):
+            out += padding(level + 1) + "->check: \n" + self.checkExpression.serialize(level + 1) + "\n"
+        if(self.updateExpression != None):
+            out += padding(level + 1) + "->update: \n" + self.updateExpression.serialize(level + 1) + "\n"
+        if(self.statement != None):
+            out += padding(level + 1) + "->statements: \n" + self.statement.serialize(level + 1)
 
         return out

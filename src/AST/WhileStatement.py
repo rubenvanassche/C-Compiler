@@ -1,5 +1,6 @@
 from src.AST.Statement import Statement
 from src.Type.BooleanType import BooleanType
+from src.utils import *
 
 class WhileStatement(Statement):
     """Node For WhileStatement in AST"""
@@ -44,5 +45,16 @@ class WhileStatement(Statement):
         return code
 
     def serialize(self, level):
-        out = "While(" + self.expression.serialize(0) + ")\n"
-        out += self.s(level) + self.statement.serialize(level + 1) + "\n"
+        out = ""
+        if(self.expression != None):
+            out += padding(level) + "WHILE:\n"
+            out += padding(level + 1) + self.expression.serialize(0)
+        else:
+            out += "WHILE"
+
+        if(self.statement != None):
+            out += padding(level) + "THEN:\n"
+            out +=  self.statement.serialize(level + 1)
+
+
+        return out

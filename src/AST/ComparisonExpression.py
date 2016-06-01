@@ -1,5 +1,6 @@
 from src.AST.Expression import Expression
 from src.Type.BooleanType import BooleanType
+from src.utils import *
 
 class ComparisonExpression(Expression):
     """Node For ComparisonExpression in AST"""

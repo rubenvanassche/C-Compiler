@@ -1,4 +1,5 @@
 from src.AST.Statement import Statement
+from src.utils import *
 
 class BreakStatement(Statement):
     """Node For BreakStatement in AST"""
@@ -13,4 +14,6 @@ class BreakStatement(Statement):
         return "ujp" + self.sym.getEndLoop() + "\n"
 
     def serialize(self, level):
-        return  self.s(level) + "break \n"
+        out = padding(level) + "BreakStatement\n"
+
+        return out

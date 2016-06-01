@@ -10,4 +10,4 @@ class RealData(Data):
         return "ldc r " + str(self.real) + "\n"
 
     def __str__(self):
-        return "real(" + str(self.real) + ")"
+        return  str(self.real) 

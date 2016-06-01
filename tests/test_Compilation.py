@@ -48,12 +48,9 @@ class TestUM(unittest.TestCase):
 
         st.registerFunction('main', integer, argumentsList, 0)
         function = st.getFunction('main', parametersList)
-        st.openScope()
-        st.registerArguments(argumentsList)
+        st.openFunctionScope(function)
 
-        # Save the static data size to the function object
-        function.staticsize = st.scope.getTotalAllocated()
-        st.closeScope()
+        st.closeFunctionScope(function)
 
 
         statement = FunctionStatement(function, [])
@@ -76,12 +73,10 @@ class TestUM(unittest.TestCase):
 
         st.registerFunction('main', integer, argumentsList, 0)
         function = st.getFunction('main', parametersList)
-        st.openScope()
-        st.registerArguments(argumentsList)
+        st.openFunctionScope(function)
 
-        # Save the static data size to the function object
-        function.staticsize = st.scope.getTotalAllocated()
-        st.closeScope()
+
+        st.closeFunctionScope(function)
 
 
         statement = FunctionStatement(function, [])

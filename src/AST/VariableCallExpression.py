@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.utils import *
 
 class VariableCallExpression(Expression):
     """Node For VariableCallExpression in AST"""
@@ -32,7 +33,7 @@ class VariableCallExpression(Expression):
         return "Todo: variable call\n"
 
     def serialize(self, level):
-        out = str(self.symbol.identifier)
-        if(self.index != None):
-            out += "[" + str(self.index) + "]"
-        return out
+        if(self.index == None):
+            return padding(level) + "VariableExpression(" + self.symbol.identifier + ")\n"
+        else:
+            return padding(level) + "VariableExpression(" + self.symbol.identifier + ", " + str(self.index) + ")\n"

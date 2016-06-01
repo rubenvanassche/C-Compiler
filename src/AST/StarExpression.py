@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.utils import *
 
 class StarExpression(Expression):
     """Node For StarExpression in AST"""
@@ -16,4 +17,7 @@ class StarExpression(Expression):
         return "ind a\n"
 
     def serialize(self, level):
-        return "star(" + self.expression.serialize(0) + ")"
+        out = padding(level) + "StarExpression\n"
+        out += self.expression.serialize(level + 1)
+
+        return out

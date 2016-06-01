@@ -19,6 +19,10 @@ class SymbolTable:
         self.labels = 0
         self.functionLabels = {}
 
+        # For function scope
+        self.functionAddress = 0
+        self.functionScope = False
+
         # Open the global scope
         self.table = Scope(None)
         self.scope = self.table
@@ -27,12 +31,44 @@ class SymbolTable:
         """Open a scope"""
         self.scope = self.scope.openScope()
 
+    def openFunctionScope(self, function):
+        """Open a scope for a function, will record addresses"""
+        self.functionAddress = 5 + function.getParameterSize()
+        self.functionScope = True
+        self.scope = self.scope.openScope()
+
+        #Register the symbols in an arguments(ArgumentsList)
+        for argument in function.arguments.arguments:
+            if(self.scope.isContainingSymbol(argument.identifier)):
+                raise SymbolAlreadyRegisteredError("Symbol '"+ argument.identifier +"' already registered in scope")
+
+            if(argument.basetype.getSize() == 0):
+                raise TypeError("Type should have a size greater then 0")
+
+            symbol = Symbol(argument.identifier, argument.basetype, self.scope.getAllocated())
+            self.scope.addSymbol(symbol)
+
+
     def closeScope(self):
         """Close Scope"""
         if(self.scope.parentScope == None):
             raise ScopeError("No scope opened previously")
 
         self.scope = self.scope.parentScope
+
+    def closeFunctionScope(self, function):
+        """Close a scope for functions"""
+        # Save the static data size to the function object
+        function.staticsize = self.scope.getTotalAllocated()
+
+        # Close scope
+        if(self.scope.parentScope == None):
+            raise ScopeError("No scope opened previously")
+
+        self.scope = self.scope.parentScope
+
+        self.functionAddress = 0
+        self.functionScope = False
 
     def registerSymbol(self, identifier, basetype):
         """Register a Symbol in the current scope with an identifier(string) and basetype(Type) is an array(bool)"""
@@ -42,10 +78,15 @@ class SymbolTable:
         if(basetype.getSize() == 0):
             raise TypeError("Type should have a size greater then 0")
 
-        symbol = Symbol(identifier, basetype, self.scope.getAllocated())
+        symbol = None
+        if(self.functionScope == True):
+            symbol = Symbol(identifier, basetype, int(self.functionAddress))
+            self.functionAddress += basetype.getSize()
+        else:
+            symbol = Symbol(identifier, basetype, self.scope.getAllocated())
+
         self.scope.addSymbol(symbol)
 
-        # raise the allocated count
         self.scope.allocated += basetype.getSize()
 
         return symbol
@@ -74,10 +115,6 @@ class SymbolTable:
 
         return function
 
-    def registerArguments(self, arguments):
-        """Register the symbols in an arguments(ArgumentsList)"""
-        for argument in arguments.arguments:
-            self.registerSymbol(argument.identifier, argument.basetype)
 
     def getSymbol(self, identifier):
         """Get a symbol from the Symbol Table with an identifier(string)"""

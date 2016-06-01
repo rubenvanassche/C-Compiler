@@ -1,4 +1,5 @@
 from src.AST.Statement import Statement
+from src.utils import *
 
 class ReturnStatement(Statement):
     """Node For ReturnStatement in AST"""
@@ -14,4 +15,7 @@ class ReturnStatement(Statement):
         return "Todo: return \n"
 
     def serialize(self, level):
-        return "return(" + self.expression.serialize(0) + ")\n"
+        out = padding(level) + "ReturnStatement\n"
+        out += self.expression.serialize(level + 1)
+
+        return out

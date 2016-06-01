@@ -10,4 +10,4 @@ class CharacterData(Data):
         return "ldc c " + str(self.character) + "\n"
 
     def __str__(self):
-        return "character(" + str(self.character) + ")"
+        return  str(self.character)

@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.utils import *
 
 class NegateExpression(Expression):
     """Node For NegateExpression in AST"""
@@ -16,4 +17,7 @@ class NegateExpression(Expression):
         return "Todo:negate expresison \n"
 
     def serialize(self, level):
-        return "-" + self.expression.serialize(0)
+        out = padding(level) + "NegateExpression\n"
+        out += self.expression.serialize(level + 1)
+
+        return out

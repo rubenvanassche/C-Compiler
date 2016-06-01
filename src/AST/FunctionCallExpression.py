@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.utils import *
 
 class FunctionCallExpression(Expression):
     """Node For FunctionCallExpression in AST"""
@@ -17,11 +18,8 @@ class FunctionCallExpression(Expression):
     def compile(self):
         code = "mst 0\n"
         code += "cup " + str(self.function.getParameterSize()) + " " + self.function.label + "\n"
-        
+
         return code
 
     def serialize(self, level):
-        out = "Call " + str(self.function.identifier) + "("
-        out += str(self.parameters) + ")"
-
-        return out
+        return padding(level) + "FunctionCallExpression(" + self.function.identifier +")\n"

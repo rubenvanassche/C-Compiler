@@ -1,5 +1,6 @@
 from src.AST.Expression import Expression
 from src.Type.ArrayType import ArrayType
+from src.utils import *
 
 class VariableExpression(Expression):
     """Node For VariableExpression in AST"""
@@ -25,8 +26,6 @@ class VariableExpression(Expression):
         return "Todo: Variable expression\n"
 
     def serialize(self, level):
-        out = "define()" + self.basetype.serialize(0) + ":" + str(self.symbol.identifier)
-        if(self.arraySize != None):
-            out += "[" + str(self.arraySize) + "]"
-        out += ")\n"
+        out = padding(level) + "VariableExpression(" + self.symbol.identifier +")\n"
+
         return out

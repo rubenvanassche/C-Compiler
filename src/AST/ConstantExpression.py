@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.utils import *
 
 # Data
 from src.Data.AddressData import AddressData
@@ -40,10 +41,13 @@ class ConstantExpression(Expression):
             raise RuntimeError("Trying to create constantexpession with unkown type")
 
     def __str__(self):
-        return "constant(" + str(self.value) + ")"
+        out = padding(level) + "ConstantExpression\n"
+        out += self.basetype.serialize(level + 1)
+
+        return out
 
     def compile(self):
         return self.value.compile()
 
     def serialize(self, level):
-        return "value(" + str(self.value) + ")"
+        return self.basetype.getPcode() + ": " + str(self.value)

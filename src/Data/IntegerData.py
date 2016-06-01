@@ -10,4 +10,4 @@ class IntegerData(Data):
         return "ldc i " + str(self.integer) + "\n"
 
     def __str__(self):
-        return "integer(" + str(self.integer) + ")"
+        return str(self.integer)

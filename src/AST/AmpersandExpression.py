@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.utils import *
 
 class AmpersandExpression(Expression):
     """Node For AmpersandExpression in AST"""
@@ -12,7 +13,10 @@ class AmpersandExpression(Expression):
         return "Ampersand(" + str(self.expression) + ")"
 
     def serialize(self, level):
-        return "ampersand(" + self.expression.serialize(0) + ")"
+        out = padding(level) + "Ampersand\n"
+        out += self.expression.serialize(level + 1)
+
+        return out
 
     def compile(self):
         return "ldc a"

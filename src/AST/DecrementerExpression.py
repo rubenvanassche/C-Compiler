@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.utils import *
 
 class DecrementerExpression(Expression):
     """Node For DecrementerExpression in AST"""
@@ -16,4 +17,7 @@ class DecrementerExpression(Expression):
         return "Todo: decrementer\n"
 
     def serialize(self, level):
-        return "decrement(" + self.variable.serialize(0) + ")"
+        out = padding(level) + "DecrementerExpression\n"
+        out += self.variable.serialize(level + 1)
+
+        return out

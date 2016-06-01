@@ -1,4 +1,5 @@
 from src.AST.Statement import Statement
+from src.utils import *
 
 class CompoundStatement(Statement):
     """Node For CompoundStatement in AST"""
@@ -29,5 +30,5 @@ class CompoundStatement(Statement):
     def serialize(self, level):
         out = ""
         for statement in self.statements:
-            out += self.s(level) + statement.serialize(level + 1) + "\n"
+            out += padding(level) + statement.serialize(level + 1) + "\n"
         return out

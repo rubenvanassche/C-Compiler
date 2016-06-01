@@ -10,7 +10,7 @@ class Function:
 
     def getStaticSize(self):
         """Get the static size required for the SSP command"""
-        size = 5 + self.staticsize - self.getParameterSize()
+        size = 5 + self.staticsize 
 
         return size
 

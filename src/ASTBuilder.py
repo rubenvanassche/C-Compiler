@@ -81,7 +81,7 @@ class ASTBuilder:
         return self.AST
 
     def serialize(self):
-        print(self.AST)
+        print(self.AST.serialize(0))
 
     def buildStatement(self, tree):
         """Build Statement"""
@@ -258,8 +258,7 @@ class ASTBuilder:
 
         # Register function in symbol table and open scope
         function = self.sym.registerFunction(identifier, returntype, arguments, 0)
-        self.sym.openScope()
-        self.sym.registerArguments(arguments)
+        self.sym.openFunctionScope(function)
 
         # Check if SEMICOLON(ready) or LBRACE(parse statements)
         childIndex += 1
@@ -284,11 +283,9 @@ class ASTBuilder:
             else:
                 raise RuntimeError("Invalid function statement: '" + tree.getText() + "'")
 
-        # Save the static data size to the function object
-        function.staticsize = self.sym.scope.getTotalAllocated()
 
         # close scope
-        self.sym.closeScope()
+        self.sym.closeFunctionScope(function)
 
         return FunctionStatement(function, statements)
 

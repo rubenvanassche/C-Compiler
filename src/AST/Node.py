@@ -1,4 +1,5 @@
 from src.SymbolTable import SymbolTable
+from src.utils import *
 
 class Node:
     """Node in AST"""
@@ -14,14 +15,7 @@ class Node:
         """Compile node to p-code"""
         return ""
 
-    # generate padding
-    def s(self, level):
-        """Generate padding for serialize function"""
-        out = ""
-        for i in range(level):
-            out += "    "
-        return out
 
     def serialize(self, level):
         """Serialize this node, the level attribute specifies how much indentation is needed"""
-        pass
+        return "Node"

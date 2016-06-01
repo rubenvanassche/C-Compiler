@@ -10,4 +10,4 @@ class StringData(Data):
         return "TODO: String data"
 
     def __str__(self):
-        return "string(" + str(self.string) + ")"
+        return  str(self.string) 

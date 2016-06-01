@@ -1,4 +1,5 @@
 from src.AST.Node import Node
+from src.utils import *
 
 class Statement(Node):
     """Node For Statement in AST"""
@@ -13,4 +14,4 @@ class Statement(Node):
         return ""
 
     def serialize(self, level):
-        pass
+        return "Statement"

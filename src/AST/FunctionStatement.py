@@ -1,4 +1,5 @@
 from src.AST.Statement import Statement
+from src.utils import *
 
 
 class FunctionStatement(Statement):
@@ -28,7 +29,8 @@ class FunctionStatement(Statement):
         return code
 
     def serialize(self, level):
-        out = "Function " + self.function.identifier + "(" + str(self.function.parameters) + ") -> " + str(self.function.returntype)+" \n"
-        out += self.s(level + 1) + self.statements.serialize(level + 1)
+        out =  padding(level) + "FunctionStatement("+ self.function.identifier +")\n"
+        for statement in self.statements:
+            out += padding(level + 1) + statement.serialize(level + 1)
 
         return out

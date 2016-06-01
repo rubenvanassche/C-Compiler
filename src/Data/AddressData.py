@@ -13,4 +13,4 @@ class AddressData(Data):
         return "ldc a " + str(self.address) + "\n"
 
     def __str__(self):
-        return "address(" + str(self.address) + ")"
+        return str(self.address)

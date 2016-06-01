@@ -1,5 +1,6 @@
 from src.AST.Expression import Expression
 from src.Type.BooleanType import BooleanType
+from src.utils import *
 
 class LogicExpression(Expression):
     """Node For LogicExpression in AST"""

@@ -13,4 +13,4 @@ class BooleanData(Data):
             return "ldc b f\n"
 
     def __str__(self):
-        return "boolean(" + str(self.boolean) + ")"
+        return str(self.boolean)

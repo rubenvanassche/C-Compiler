@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.utils import *
 
 class IncrementerExpression(Expression):
     """Node For IncrementerExpression in AST"""
@@ -16,4 +17,7 @@ class IncrementerExpression(Expression):
         return "Todo:incrementer\n"
 
     def serialize(self, level):
-        return "increment(" + self.variable.serialize(0) + ")"
+        out = padding(level) + "IncrementerExpression\n"
+        out += self.variable.serialize(level + 1)
+
+        return out

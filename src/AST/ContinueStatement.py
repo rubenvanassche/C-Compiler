@@ -1,4 +1,5 @@
 from src.AST.Statement import Statement
+from src.utils import *
 
 class ContinueStatement(Statement):
     """Node For ContinueStatement in AST"""
@@ -13,4 +14,6 @@ class ContinueStatement(Statement):
         return "ujp " + self.sym.getBeginLoop() + "\n"
 
     def serialize(self, level):
-        return  self.s(level) + "continue \n"
+        out = padding(level) + "ContinueStatement\n"
+
+        return out

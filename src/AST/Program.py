@@ -1,4 +1,5 @@
 from src.AST.Node import Node
+from src.utils import *
 
 class Program(Node):
     """Node For Program in AST"""
@@ -36,11 +37,9 @@ class Program(Node):
     def addStatement(self, statement):
         self.statements.append(statement)
 
-    def serialize(self, level):
-        pass
 
     def serialize(self, level):
         out = "Program\n:"
         for statement in self.statements:
-            out += self.s(1) + statement.serialize(1)
+            out += padding(level + 1) + statement.serialize(1)
         return out

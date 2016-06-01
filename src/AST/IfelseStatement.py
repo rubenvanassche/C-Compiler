@@ -1,5 +1,6 @@
 from src.AST.Statement import Statement
 from src.Type.BooleanType import BooleanType
+from src.utils import *
 
 class IfelseStatement(Statement):
     """Node For IfelseStatement in AST"""
@@ -68,10 +69,22 @@ class IfelseStatement(Statement):
 
         return code
     def serialize(self, level):
-        out =  "If(" + self.expression.serialize(0) + ")\n:"
-        out += statement.serialize(index) + "\n"
-        if(self.alternativeStatement != None):
-            out += "Else\n:"
-            out += alternativeStatement.serialize(index) + "\n"
+        out = ""
+        if self.expression != None:
+            out += padding(level) + "IF:\n"
+            out += self.expression.serialize(level + 1)
+        else:
+            out += "IF\n"
+
+        if self.statement != None:
+            out += "THEN:\n"
+            out += self.statement.serialize(level + 1)
+        else:
+            out += "THEN\n"
+
+        if self.alternativeStatement != None:
+            out += "ELSE:\n"
+            out += self.alternativeStatement.serialize(level + 1)
+
 
         return out
