@@ -2,155 +2,11 @@ from src.Type.IntegerType import IntegerType
 from src.Exceptions.SymbolTable import *
 from src.utils import *
 
-class Scope:
-    """An Scope in the program"""
-    def __init__(self, parentScope):
-        """Initializer with allocated(int) which represents from where in the memory the scope can start allocating"""
-        self.parentScope = parentScope
-        self.allocated = 0
-        self.symbols = []
-        self.aliases = []
-        self.functions = []
-        self.scopes = []
-
-    def openScope(self):
-        newScope = Scope(self)
-        self.scopes.append(newScope)
-
-        return self.scopes[-1]
-
-    def addSymbol(self, symbol):
-        """Add a Symbol to the Scope"""
-        self.symbols.append(symbol)
-
-    def addAlias(self, alias):
-        """Add an Alias to the Scope"""
-        self.aliases.append(alias)
-
-    def addFunction(self, function):
-        """Add a Function to the Scope"""
-        self.functions.append(function)
-
-    def getAllocated(self):
-        """Returns how many memory was allocated in this scope"""
-        return self.allocated
-
-    def getTotalAllocated(self):
-        """Return how many memory was allocated in this scope and it's childs scopes"""
-        output = self.allocated
-
-        for scope in self.scopes:
-            output += scope.getTotalAllocated()
-
-        return output
-
-    def isContainingSymbol(self, identifier):
-        """Returns true if the scope has the symbol"""
-        return False if self.getSymbol(identifier) == None else True
-
-    def isContainingAlias(self, identifier):
-        """Returns true if the scope has the alias"""
-        return False if self.getAlias(identifier) == None else True
-
-    def isContainingFunction(self, identifier, arguments):
-        """Returns true if the scope has the function"""
-        for function in self.functions:
-            if function.identifier == identifier and arguments == function.arguments:
-                return True
-
-        return False
-
-    def getSymbol(self, identifier):
-        """Get the symbol in the scope"""
-        for symbol in self.symbols:
-            if symbol.identifier == identifier:
-                return symbol
-
-        return None
-
-    def getAlias(self, identifier):
-        """Get the alias in the scope"""
-        for alias in self.aliases:
-            if alias.identifier == identifier:
-                return alias
-
-        return None
-
-    # parameters is Parameterslist
-    def getFunction(self, identifier, parameters):
-        """Get the function in the scope"""
-        for function in self.functions:
-            if function.identifier == identifier and function.arguments.checkCallParameters(parameters):
-                return function
-
-        return None
-
-    def printer(self, level):
-        output = padding(level) + "||SCOPE(" + str(self.allocated) + ")\n"
-
-        # Symbols
-        for symbol in self.symbols:
-            output += padding(level) + "-> Symbol(" + symbol.identifier + ") : " + str(symbol.basetype) + "\n"
-
-        # Aliases
-        for alias in self.aliases:
-            output += padding(level) + "-> Alias(" + alias.identifier + ") : " + str(alias.basetype) + "\n"
-
-        # functions
-        for function in self.functions:
-            output += padding(level) + "-> Function: " + function.identifier + "(" + str(function.arguments) + ") :  " + str(function.returntype) + "\n"
-
-        for scope in self.scopes:
-            output += scope.printer(level + 1)
-
-        return output
-
-class Symbol:
-    """Representation of a Symbol"""
-    def __init__(self, identifier, basetype, address):
-        """Initialize with an identifier(string), basetype(Type) and array(bool)"""
-        self.identifier = identifier
-        self.basetype = basetype
-        self.address = address
-
-class Alias:
-    """Representation of an Alias"""
-    def __init__(self, identifier, basetype):
-        """Initialize with an identifier(string) and basetype(Type)"""
-        self.identifier = identifier
-        self.basetype = basetype
-
-class Function:
-    """Representation of a Function"""
-    def __init__(self, identifier, returntype, arguments, staticsize, label):
-        """Initialize with an identifier(string), returnType(Type), argument(argumentList), staticsize(int) and label(string)"""
-        self.identifier = identifier
-        self.returntype = returntype
-        self.arguments = arguments
-        self.staticsize = staticsize
-        self.label = label
-
-    def getStaticSize(self):
-        """Get the static size required for the SSP command"""
-        size = 5
-
-        return size
-
-    def getParameterSize(self):
-        """Get the parameter size required for the cup command"""
-        size = 0
-
-        for argument in self.arguments.arguments:
-            size += argument.basetype.getSize()
-
-        return size
-class Loop:
-    """Representation of a Loop"""
-    def __init__(self, begin, end):
-        """initialize with begin(int) address and end(int) address of loop"""
-        self.begin = begin
-        self.end = end
-
+from src.SymbolTable.Alias import Alias
+from src.SymbolTable.Function import Function
+from src.SymbolTable.Loop import Loop
+from src.SymbolTable.Scope import Scope
+from src.SymbolTable.Symbol import Symbol
 
 class SymbolTable:
     """Representation of a Symbol Table"""
@@ -318,24 +174,8 @@ class SymbolTable:
     def __str__(self):
         """String Representation"""
         out = "Symbol Table\n"
-        out += "------------\n\n"
-
-        counter = 0
-        for scope in self.scopes:
-            out += "scope(" + str(counter) + ") - allocated: " + str(scope.getAllocated()) +"\n"
-            out += "    Symbols: "
-            for symbol in scope.symbols:
-                out += symbol.identifier + ","
-            out += "\n"
-            out += "    Aliases: "
-            for alias in scope.aliases:
-                out += alias.identifier + ","
-            out += "\n"
-            out += "    Functions: "
-            for function in scope.functions:
-                out += function.identifier + ","
-            out += "\n"
-
-            counter += 1
+        out += "--------------------------------------\n"
+        out += self.scope.printer(0) + "\n"
+        out += "--------------------------------------\n"
 
         return out

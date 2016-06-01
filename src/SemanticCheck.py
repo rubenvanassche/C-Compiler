@@ -1,5 +1,5 @@
 # Symbol Table
-from SymbolTable import SymbolTable
+from src.SymbolTable.SymbolTable import SymbolTable
 
 # AST Imports
 from src.AST.AmpersandExpression import AmpersandExpression

@@ -1,7 +1,7 @@
 import os.path, sys
 sys.path.insert(0,'src')
 from ASTBuilder import ASTBuilder
-from SymbolTable import SymbolTable
+from src.SymbolTable.SymbolTable import SymbolTable
 import argparse
 
 def main(argv):
@@ -23,9 +23,7 @@ def main(argv):
     astBuilder = ASTBuilder(args["file"], symboltable)
     ast = astBuilder.build()
 
-    print("------SYMBOL-------")
-    print(symboltable.scope.printer(0))
-    print("------SYMBOL-------")
+    print(symboltable)
 
     if(bool(args["nocompile"]) == False):
         compiled = ast.compile()

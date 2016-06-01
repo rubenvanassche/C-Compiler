@@ -1,6 +1,6 @@
 import unittest
-from src.SymbolTable import SymbolTable
-from src.SymbolTable import Function
+from src.SymbolTable.SymbolTable import SymbolTable
+from src.SymbolTable.Function import Function
 from src.Exceptions.SymbolTable import *
 
 from src.Type.IntegerType import IntegerType
