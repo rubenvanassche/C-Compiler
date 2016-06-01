@@ -93,13 +93,13 @@ class Function:
         self.address = address
         self.label = label
 
-    def getStaticSize():
+    def getStaticSize(self):
         """Get the static size required for the SSP command"""
         size = 5
 
         return size
 
-    def getParameterSize():
+    def getParameterSize(self):
         """Get the parameter size required for the cup command"""
         size = 0
 

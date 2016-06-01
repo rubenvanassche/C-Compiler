@@ -16,6 +16,7 @@ from src.Type.Parameter import ArgumentsList
 from src.Type.Parameter import Argument
 
 from src.AST.ConstantExpression import ConstantExpression
+from src.AST.VariableCallExpression import VariableCallExpression
 
 class TestUM(unittest.TestCase):
     def setUp(self):
@@ -118,6 +119,9 @@ class TestUM(unittest.TestCase):
 
         st.registerSymbol('integer', integer)
         self.assertRaises(SymbolAlreadyRegisteredError, lambda: st.registerSymbol('integer', integer))
+
+    def test_scope_allocated(self):
+        st = Symboltable()
 
     def test_not_registered_symbol_call(self):
         st = SymbolTable()
@@ -320,7 +324,31 @@ class TestUM(unittest.TestCase):
         self.assertEqual(st.getFunction('add', parametersList).label, 'add1')
         st.closeScope()
 
-    def test_function_parameter_size(self):
+    def test_function_parameter_size_array_one_element(self):
+        st = SymbolTable()
+        integer = IntegerType()
+        arrayinteger = ArrayType(integer, 3)
+
+        # Create arguments
+        argumentsList = ArgumentsList()
+        argumentsList.add(Argument('a', integer))
+        argumentsList.add(Argument('b', integer))
+
+        # Create array
+        st.registerSymbol('b', arrayinteger)
+
+        # Create parameters
+        parametersList = ParametersList()
+        parametersList.add(Parameter(ConstantExpression(1, 'int')))
+        parametersList.add(Parameter(VariableCallExpression(st.getSymbol('b'), 1)))
+
+        # Register basic function, no arguments
+        st.registerFunction('add', integer, argumentsList, 0)
+        function = st.getFunction('add', parametersList)
+
+        self.assertEqual(function.getParameterSize(), 2)
+
+    def test_function_parameter_size_array_full(self):
         st = SymbolTable()
         integer = IntegerType()
         arrayinteger = ArrayType(integer, 3)
@@ -330,9 +358,20 @@ class TestUM(unittest.TestCase):
         argumentsList.add(Argument('a', integer))
         argumentsList.add(Argument('b', arrayinteger))
 
+        # Create array
+        st.registerSymbol('b', arrayinteger)
+
+        # Create parameters
+        parametersList = ParametersList()
+        parametersList.add(Parameter(ConstantExpression(1, 'int')))
+        parametersList.add(Parameter(VariableCallExpression(st.getSymbol('b'), None)))
+
         # Register basic function, no arguments
         st.registerFunction('add', integer, argumentsList, 0)
-        st.getFunction('add')
+        function = st.getFunction('add', parametersList)
+
+        self.assertEqual(function.getParameterSize(), 4)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -17,6 +17,10 @@ class VariableCallExpression(Expression):
         self.index = index
         self.basetype = symbol.basetype
 
+        if(index != None):
+            #Call to element in array so change the basetype to the array's basetype
+            self.basetype = symbol.basetype.basetype
+
     def __str__(self):
         out = "Call " + str(self.symbol.identifier)
         if(self.index != None):

@@ -18,11 +18,20 @@ class Program(Node):
         if(len(self.statements) == 0):
             return "hlt\n"
 
-        code = ""
+        # Add the initial code
+        code = "mst 0\n"
+        code += "cup 0 init\n"
+        code += "init:\n"
+        code += "ssp 5\n"
+        code += "mst 0\n"
+        code += "cup 0 main0\n"
+        code += "hlt\n"
+
+
         for statement in self.statements:
             code += statement.compile()
 
-        return "ssp " +  str(self.sym.getAllocatedSpace()) + "\n" + code + "hlt\n"
+        return code
 
     def addStatement(self, statement):
         self.statements.append(statement)
