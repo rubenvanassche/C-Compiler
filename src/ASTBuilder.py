@@ -720,7 +720,7 @@ class ASTBuilder:
 
         if(token.type == CLexer.AND):
             return LogicExpression(leftExpression, rightExpression, "&&")
-        elif(token.type == CLexer.ORD):
+        elif(token.type == CLexer.OR):
             return LogicExpression(leftExpression, rightExpression, "||")
         else:
             raise RuntimeError("Invalid LogicExpression: '" + tree.getText() + "'")

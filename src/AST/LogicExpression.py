@@ -16,6 +16,13 @@ class LogicExpression(Expression):
         if(self.leftExpression.basetype != self.rightExpression.basetype):
             raise RuntimeError("The two types of the expressions in the logic expression should be the same")
 
+        if(not isinstance(self.leftExpression.basetype, BooleanType)):
+            raise RuntimeError("Left side of logic expression should be a bool, now: " + str(type(self.leftExpression.basetype)))
+
+        if(not isinstance(self.rightExpression.basetype, BooleanType)):
+            raise RuntimeError("Right side of logic expression should be a bool, now: " + str(type(self.rightExpression.basetype)))
+
+
         # set the type of this expression
         self.basetype = BooleanType()
 

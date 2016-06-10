@@ -1,4 +1,5 @@
 from src.AST.Expression import Expression
+from src.Type.AddressType import AddressType
 from src.utils import *
 
 class AmpersandExpression(Expression):
@@ -7,7 +8,7 @@ class AmpersandExpression(Expression):
         Expression.__init__(self, None)
         self.expression = expression
 
-        self.basetype = self.expression.basetype
+        self.basetype = AddressType(self.expression.basetype)
 
     def __str__(self):
         return "Ampersand(" + str(self.expression) + ")"

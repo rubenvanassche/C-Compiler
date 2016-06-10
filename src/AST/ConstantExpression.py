@@ -36,7 +36,7 @@ class ConstantExpression(Expression):
             self.value = RealData(value)
         elif(basetype == "string"):
             self.basetype = AddressType(ArrayType(CharacterType(), len(value)))
-            self.value = StringData(value)
+            self.value = StringData(value + "\0")
         else:
             raise RuntimeError("Trying to create constantexpession with unkown type")
 

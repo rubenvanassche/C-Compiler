@@ -20,6 +20,7 @@ test:
 	python3 -m unittest discover
 
 testold:
+	python3 Compiler.py testfiles/ast/logic.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/multivar.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/pointers.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/io.c -showast -o testoutput
