@@ -10,7 +10,7 @@ class AddressType(PrimitiveType):
 
     def __eq__(self, other):
         if(not isinstance(other, AddressType)):
-            return false
+            return False
         else:
             if(self.addressee == None):
                 return self.addressee == other.addressee

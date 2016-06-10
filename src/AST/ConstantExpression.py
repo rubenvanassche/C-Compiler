@@ -35,14 +35,14 @@ class ConstantExpression(Expression):
             self.basetype = RealType()
             self.value = RealData(value)
         elif(basetype == "string"):
-            self.basetype = ArrayType(CharacterType(), len(value))
+            self.basetype = AddressType(ArrayType(CharacterType(), len(value)))
             self.value = StringData(value)
         else:
             raise RuntimeError("Trying to create constantexpession with unkown type")
 
     def __str__(self):
         return "ConstantExpression"
-        
+
     def compile(self):
         return self.value.compile()
 

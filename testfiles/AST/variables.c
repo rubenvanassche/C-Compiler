@@ -8,4 +8,5 @@ int main(){
     int c[10];
     c[3];
     a = &b;
+    //char *str = "Hallokes";
 }

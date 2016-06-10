@@ -20,6 +20,7 @@ test:
 	python3 -m unittest discover
 
 testold:
+	python3 Compiler.py testfiles/ast/io.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/main.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/arithmetic.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/array.c -showast -o testoutput
@@ -52,3 +53,10 @@ testsymbol:
 	python3 Compiler.py testfiles/Symboltable/test11.c
 	python3 Compiler.py testfiles/Symboltable/test12.c
 	python3 Compiler.py testfiles/Symboltable/test13.c
+
+testcrash:
+	python3 Compiler.py testfiles/Crashes/2io3.c -showast -o testoutput
+	python3 Compiler.py testfiles/Crashes/4control2.c -showast -o testoutput
+	python3 Compiler.py testfiles/Crashes/4control3.c -showast -o testoutput
+	python3 Compiler.py testfiles/Crashes/4control6.c -showast -o testoutput
+	python3 Compiler.py testfiles/Crashes/7function2.c -showast -o testoutput

@@ -5,7 +5,7 @@ class ArrayType(Type):
 
     # basetype: type and size:int
     def __init__(self, basetype, size):
-        totalSize = '0' if basetype == None else size*basetype.getSize()
+        totalSize = '0' if basetype == None else size * basetype.getSize()
         Type.__init__(self, totalSize)
 
         self.basetype = basetype
@@ -15,7 +15,11 @@ class ArrayType(Type):
         if(not isinstance(other, ArrayType)):
             return False
         else:
-            return (self.basetype == other.basetype and self.size == other.size)
+            if(self.size == -1 or other.size == -1):
+                # Clause no len specified
+                return (self.basetype == other.basetype)
+            else:
+                return (self.basetype == other.basetype and self.size == other.size)
 
     def getPcode(self):
         return self.basetype.getPcode()

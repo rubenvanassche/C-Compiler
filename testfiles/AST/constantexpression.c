@@ -1,5 +1,5 @@
 int main(){
-    char a[6] = "aaaaa";
+    //char* a = "aaaaa";
      float b = 0.5;
 int c = 122;
 char d= 'a';

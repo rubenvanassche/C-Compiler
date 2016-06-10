@@ -59,6 +59,7 @@ class ArgumentsList:
     def __init__(self):
         """Initializer"""
         self.arguments = []
+        self.unlimited = False # Unlimited arguments possible after defined arguments
 
     def add(self, argument):
         """Add a argument(Argyment), will check if identifiers are unique"""
@@ -76,6 +77,10 @@ class ArgumentsList:
         for argument in self.arguments:
             out += str(argument) + ", "
         return out
+
+    def makeUnlimited(self):
+        """Make it possible to add unlimited arguments"""
+        self.unlimited = True
 
     def size(self):
         return len(self.arguments)
@@ -96,12 +101,12 @@ class ArgumentsList:
 
     def checkCallParameters(self, parametersList):
         """Check if an list of parameters(Parameter) is an valid list of parameters for this argumentList"""
-        if(parametersList.size() != self.size()):
+        if(parametersList.size() != self.size() and self.unlimited != True):
             return False
 
         # Checking of types
         indexCounter = 0
-        while(indexCounter < parametersList.size()):
+        while(indexCounter < self.size()):
             if(parametersList.parameters[indexCounter].expression.basetype != self.arguments[indexCounter].basetype):
                 raise RuntimeError("Parameter " + str(type(parametersList.parameters[indexCounter].expression.basetype)) + " can not be used in argument " + str(type(self.arguments[indexCounter].basetype)))
                 return False

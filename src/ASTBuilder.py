@@ -159,6 +159,18 @@ class ASTBuilder:
         path = tree.getChild(1).getText()
         # check if correct format
         if((path.startswith('"') and path.endswith('"')) or (path.startswith('<') and path.endswith('>'))):
+            path = path[1:-1]
+
+            # Let's add some definitions to the symbol table
+            if(path == "stdio.h"):
+                #printf
+                argumentsList = ArgumentsList()
+                argumentsList.add(Argument("string", AddressType(ArrayType(CharacterType(), -1))))
+                argumentsList.makeUnlimited()
+
+                self.sym.registerFunction('printf', IntegerType(), argumentsList, True)
+                self.sym.registerFunction('scanf', IntegerType(), argumentsList, True)
+
             return IncludeStatement(path)
         else:
             raise RuntimeError("Invalid include statement: '" + tree.getText() + "'")

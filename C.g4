@@ -1,7 +1,6 @@
 grammar C;
 
 
-
 /**
  * A C program consist of a sequence of statements in which they are ended with
  * the special symbol EOF, indicating the end of the file.
@@ -65,12 +64,12 @@ expression
 | expression (EQUAL|NOTEQUAL|GREATERTHAN|LESSTHAN|LESSTHANOREQUAL|GREATERTHANOREQUAL) expression
 | expression (AND|OR) expression
 | expression LSQUAREBRACKET expression RSQUAREBRACKET
-| IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN
 | expression (LSQUAREBRACKET expression RSQUAREBRACKET)
 | variable (COMMA STAR* IDENTIFIER (LSQUAREBRACKET NUM RSQUAREBRACKET)*)* ((PLUS|MINUS)? ASSIGN expression)?
 | variable (PLUS PLUS|MINUS MINUS)
 | expression (STAR|SLASH) expression
 | expression (PLUS|MINUS) expression
+| IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN
 ;
 
 variable

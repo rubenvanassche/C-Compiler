@@ -470,6 +470,31 @@ class TestUM(unittest.TestCase):
         self.assertEqual(function.getStaticSize(), 14)
         self.assertEqual(function.getParameterSize(), 4)
 
+    def test_function_register_with_unlimited_arguments(self):
+        st = SymbolTable()
+        integer = IntegerType()
+        real = RealType()
+        boolean = BooleanType()
+        character = CharacterType()
+
+        # Create arguments
+        argumentsList = ArgumentsList()
+        argumentsList.add(Argument('a', integer))
+        argumentsList.makeUnlimited()
+
+        # Create parameters
+        parametersList = ParametersList()
+        parametersList.add(Parameter(ConstantExpression(1, 'int')))
+        parametersList.add(Parameter(ConstantExpression(3.14, 'float')))
+        parametersList.add(Parameter(ConstantExpression(True, 'bool')))
+        parametersList.add(Parameter(ConstantExpression(False, 'bool')))
+
+        # Register basic function,  arguments
+        st.registerFunction('printer', integer, argumentsList, True)
+
+        # get basic function
+        self.assertEqual(type(st.getFunction('printer', parametersList)), Function)
+
 
 
 if __name__ == '__main__':
