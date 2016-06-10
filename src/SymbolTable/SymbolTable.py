@@ -65,7 +65,6 @@ class SymbolTable:
         """Close a scope for functions"""
         # Save the static data size to the function object
         function.staticsize = self.scope.getTotalAllocated()
-        print(function.staticsize)
 
         # Close scope
         if(self.scope.parentScope == None):

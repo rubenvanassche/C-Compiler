@@ -623,7 +623,6 @@ class ASTBuilder:
             # Add to variables list
             variables.append(variable)
 
-            print(counter)
 
             if((counter + 2) < tree.getChildCount()):
                 token = tree.getChild(counter + 1).getPayload()

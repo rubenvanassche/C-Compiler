@@ -14,7 +14,10 @@ class NegateExpression(Expression):
         return "-" + str(self.expression)
 
     def compile(self):
-        return "Todo:negate expresison \n"
+        output = self.expression.compile()
+        output += "neg " + self.basetype.getPcode() + "\n"
+
+        return output
 
     def serialize(self, level):
         out = padding(level) + "NegateExpression\n"

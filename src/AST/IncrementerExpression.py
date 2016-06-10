@@ -14,7 +14,11 @@ class IncrementerExpression(Expression):
         return str(self.variable) + "++"
 
     def compile(self):
-        return "Todo:incrementer\n"
+        output = self.variable.compile()
+        output += "inc " + self.basetype.getPcode() + " 1\n"
+
+        return output
+
 
     def serialize(self, level):
         out = padding(level) + "IncrementerExpression\n"

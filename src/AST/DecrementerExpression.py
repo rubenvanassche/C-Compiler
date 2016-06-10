@@ -14,7 +14,10 @@ class DecrementerExpression(Expression):
         return str(self.variable) + "--"
 
     def compile(self):
-        return "Todo: decrementer\n"
+        output = self.variable.compile()
+        output += "dec " + self.basetype.getPcode() + " 1\n"
+
+        return output
 
     def serialize(self, level):
         out = padding(level) + "DecrementerExpression\n"

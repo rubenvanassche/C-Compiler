@@ -20,28 +20,31 @@ test:
 	python3 -m unittest discover
 
 testold:
-	python3 Compiler.py testfiles/ast/logic.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/multivar.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/pointers.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/io.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/main.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/arithmetic.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/array.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/assignment.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/compoundstatement.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/const.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/constantexpression.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/function.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/functioncall.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/if.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/include.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/negatenot.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/typedef.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/variables.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/while.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/for.c -showast -o testoutput
-	python3 Compiler.py testfiles/ast/return.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/logic.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/multivar.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/pointers.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/io.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/main.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/arithmetic.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/array.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/assignment.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/compoundstatement.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/const.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/constantexpression.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/function.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/functioncall.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/if.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/include.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/negatenot.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/typedef.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/variables.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/while.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/for.c -showast -o testoutput
+	python3 Compiler.py testfiles/AST/return.c -showast -o testoutput
 
+testcompiler:
+	python3 Compiler.py testfiles/Compiler/basic.c -showast -o testoutput/Compiler
+	python3 Compiler.py testfiles/Compiler/fact.c -showast -o testoutput/Compiler
 
 
 testcrash:
