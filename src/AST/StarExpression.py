@@ -19,7 +19,9 @@ class StarExpression(Expression):
         return "Star(" + str(self.expression) + ")"
 
     def compile(self):
-        return "ind a\n"
+        output = self.expression.compile()
+        output += "ind " + self.expression.basetype.addressee.getPcode() + "\n"
+        return output
 
     def serialize(self, level):
         out = padding(level) + "StarExpression\n"
