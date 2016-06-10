@@ -8,7 +8,7 @@ int main(){
 
   if(false){
     a = 10;
-  else{
+  }else{
     a = 42;
   }
 }

@@ -54,8 +54,18 @@ class AssignmentExpression(Expression):
             if(self.variable.index == None):
                 code += "str " + str(self.variable.symbol.basetype.getPcode()) + " 0 " + str(self.variable.symbol.address) + "\n"
             else:
-                address = self.variable.symbol.address + self.variable.index * self.variable.symbol.basetype.basetype.getSize()
-                code += "str " + str(self.variable.symbol.basetype.getPcode()) + " 0 " + str(address) + "\n"
+                #address = self.variable.symbol.address + self.variable.index * self.variable.symbol.basetype.basetype.getSize()
+                code = "lda 0 " + str(self.variable.symbol.address) + "\n"
+                code += "conv a i\n"
+                code += self.variable.index.compile()
+                code += "add i\n"
+                code += "conv i a\n"
+
+                # Calculate value
+                code += self.expression.compile()
+
+                code += "sto " + str(self.variable.symbol.basetype.getPcode()) + "\n"
+                return code
         else:
             raise RuntimeError("Assignment can only be done with variablecall or variable")
 

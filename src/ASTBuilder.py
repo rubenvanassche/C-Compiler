@@ -857,19 +857,12 @@ class ASTBuilder:
                 if(type(index.basetype) != type(IntegerType())):
                     raise RuntimeError("Array index can only be defined by an int")
 
-                # get the value of the integer from the constantexpression
-                index = index.value.integer
-
                 # Check symbol Table if symbol exists
                 symbol = self.sym.getSymbol(identifier)
 
                 # Check if variable is an array
                 if(symbol.basetype.isArray() == False):
                     raise RuntimeError("Tried to get an array which is not an array")
-
-                # check if index is not out ofbounds
-                if(symbol.basetype.getElementsCount() <= index):
-                    raise RuntimeError("Index of array is out of bounds")
 
                 return VariableCallExpression(symbol, index)
             elif(tree.getChild(0).getChildCount() == 2):

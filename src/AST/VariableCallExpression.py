@@ -30,7 +30,17 @@ class VariableCallExpression(Expression):
         return out
 
     def compile(self):
-        code = "lod " + str(self.symbol.basetype.getPcode()) + " 0 " + str(self.symbol.address) + "\n"
+        if(self.index == None):
+            return "lod " + str(self.symbol.basetype.getPcode()) + " 0 " + str(self.symbol.address) + "\n"
+        else:
+            # Array
+            code = "lda 0 " + str(self.symbol.address) + "\n"
+            code += "conv a i\n"
+            code += self.index.compile()
+            code += "add i\n"
+            code += "conv i a\n"
+            code += "ind " + self.basetype.getPcode() + "\n"
+
         return code
 
     def serialize(self, level):

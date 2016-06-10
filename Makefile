@@ -48,6 +48,7 @@ testcompiler:
 	python3 Compiler.py testfiles/Compiler/basic.c -showast -o testoutput/Compiler
 	python3 Compiler.py testfiles/Compiler/addpointer.c -showast -o testoutput/Compiler
 	python3 Compiler.py testfiles/Compiler/fact.c -showast -o testoutput/Compiler
+	python3 Compiler.py testfiles/Compiler/break.c -showast -o testoutput/Compiler
 
 
 testcrash:
