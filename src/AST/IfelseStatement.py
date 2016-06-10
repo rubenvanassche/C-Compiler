@@ -1,5 +1,6 @@
 from src.AST.Statement import Statement
 from src.Type.BooleanType import BooleanType
+from src.Type.IntegerType import IntegerType
 from src.utils import *
 
 class IfelseStatement(Statement):
@@ -30,8 +31,6 @@ class IfelseStatement(Statement):
 
     def compile(self):
         # Check if expression is an boolean type
-        if(type(self.expression.basetype) != type(BooleanType())):
-            raise RuntimeError("The expression in the if clause should be of an boolean type")
 
         # Open scope
         self.sym.openScope()

@@ -443,10 +443,20 @@ class ASTBuilder:
         statement = self.buildCompoundStatement(tree.getChild(4))
         self.sym.closeScope()
 
-        # Build alternative statement
-        self.sym.openScope()
-        alternativeStatement = self.buildCompoundStatement(tree.getChild(6))
-        self.sym.closeScope()
+        alternativeStatement = None
+        # Check if else clause are statements or if it is another if clause
+        if(tree.getChild(6).getChildCount() > 0):
+            token = tree.getChild(6).getChild(0).getPayload()
+            if(isinstance(token, Token) and token.type == CLexer.IF):
+                # another if clause
+                alternativeStatement = self.buildIfelseStatement(tree.getChild(6))
+            else:
+                # Build alternative statement
+                self.sym.openScope()
+                alternativeStatement = self.buildCompoundStatement(tree.getChild(6))
+                self.sym.closeScope()
+
+
 
         # Check if ELSE at end
         token = tree.getChild(5).getPayload()

@@ -8,5 +8,5 @@ int main()
     scanf("%s", s);
     printf("%10s %3d %3i %4c\n", s, i, i, s[0]);
 
-    //return 0;
+    return 0;
 }
