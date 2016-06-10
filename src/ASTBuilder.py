@@ -217,7 +217,7 @@ class ASTBuilder:
         # Close Scope
         self.sym.closeScope()
 
-        return CompoundStatement(statements, usedSpace, self.sym)
+        return CompoundStatement(statements)
 
 
     def buildFunctionStatement(self, tree):
@@ -527,6 +527,7 @@ class ASTBuilder:
                     raise RuntimeError("Invalid expression: '" + tree.getText() + "'")
         elif(tree.getChildCount() == 3):
 
+            token0 = tree.getChild(0).getPayload()
             token = tree.getChild(1).getPayload()
             token2 = tree.getChild(2).getPayload()
             if(isinstance(token, Token) and isinstance(token2, Token) and token.type == CLexer.PLUS and token2.type == CLexer.PLUS):
@@ -535,6 +536,9 @@ class ASTBuilder:
             elif(isinstance(token, Token) and isinstance(token2, Token) and token.type == CLexer.MINUS and token2.type == CLexer.MINUS):
                 # variable (PLUS PLUS)|(MINUS MINUS)
                 return self.buildDecrementerExpression(tree)
+            elif(isinstance(token0, Token) and isinstance(token2, Token) and token0.type == CLexer.LPAREN and token2.type == CLexer.RPAREN):
+                # ( expression )
+                return self.buildExpression(tree.getChild(1))
             elif(isinstance(token, Token)):
                 # IDENTIFIER ASSIGN expression
                 # expression MULTIPLY expression
@@ -572,28 +576,82 @@ class ASTBuilder:
                 else:
                     raise RuntimeError("Invalid expression: '" + tree.getText() + "'")
             else:
-                # LPAREN expression RPAREN
-                # Check for expression in expresison
-                token = tree.getChild(0).getPayload()
-                if(not isinstance(token, Token) or token.type != CLexer.LPAREN):
-                    raise RuntimeError("Invalid expression statement: '" + tree.getText() + "'")
-
-                token = tree.getChild(2).getPayload()
-                if(not isinstance(token, Token) or token.type != CLexer.RPAREN):
-                    raise RuntimeError("Invalid expression statement: '" + tree.getText() + "'")
-
-                return self.buildExpression(tree.getChild(1))
+                # Probably a multivar
+                token = tree.getChild(tree.getChildCount() - 2).getPayload()
+                if(isinstance(token, Token) and token.type == CLexer.EQUAL):
+                    return self.buildMultivarExpression(tree)
+                else:
+                    raise RuntimeError("Invalid expression: '" + tree.getText() + "'")
         else:
             # Check for function call - IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN
-            token = tree.getChild(1).getPayload()
-            if(not isinstance(token, Token) or token.type != CLexer.LPAREN):
-                raise RuntimeError("Invalid expression statement: '" + tree.getText() + "'")
+            token1 = tree.getChild(1).getPayload()
+            token2 = tree.getChild(tree.getChildCount() - 1).getPayload()
+            if(isinstance(token1, Token) and token1.type == CLexer.LPAREN and isinstance(token2, Token) and token2.type == CLexer.RPAREN):
+                return self.buildFunctionCallExpression(tree)
 
-            token = tree.getChild(tree.getChildCount() - 1).getPayload()
-            if(not isinstance(token, Token) or token.type != CLexer.RPAREN):
-                raise RuntimeError("Invalid expression statement: '" + tree.getText() + "'")
 
-            return self.buildFunctionCallExpression(tree)
+            # Check if multivar
+            counter = 2
+            multiVar = True
+
+            while(counter < tree.getChildCount() - 3):
+                token = tree.getChild(counter).getPayload()
+                if(not isinstance(token, Token) or token.type != CLexer.COMMA):
+                    multiVar = False
+
+                counter += 2
+
+            if(multiVar == True):
+                return self.buildMultivarExpression(tree)
+
+            raise RuntimeError("Invalid expression: '" + tree.getText() + "'")
+
+
+    def buildMultivarExpression(self, tree):
+        """Build an expression with multiple variables"""
+
+        # Let's start building
+        basetype = self.buildType(tree.getChild(0))
+        variables = []
+
+        counter = 1
+        while(True):
+            identifier = tree.getChild(counter).getText()
+            # Register in Symbol Table
+            symbol = self.sym.registerSymbol(identifier, basetype)
+            variable = VariableExpression(symbol)
+            # Add to variables list
+            variables.append(variable)
+
+            print(counter)
+
+            if((counter + 2) < tree.getChildCount()):
+                token = tree.getChild(counter + 1).getPayload()
+                if(isinstance(token, Token) and token.type == CLexer.COMMA):
+                    counter += 2
+                else:
+                    break
+            else:
+                break
+
+        # also assignment?
+        token = tree.getChild(tree.getChildCount() - 2).getPayload()
+        if(isinstance(token, Token) and token.type == CLexer.ASSIGN):
+            compoundstatement = CompoundStatement([])
+            assignExpression = self.buildExpression(tree.getChild(tree.getChildCount() - 1))
+
+            for variable in variables:
+                compoundstatement.statements.append(AssignmentExpression(variable, assignExpression))
+
+            return compoundstatement
+        else:
+            # nowp just return these variables
+            compoundstatement = CompoundStatement([])
+            compoundstatement.statements = variables
+
+            return compoundstatement
+
+
 
     def buildArithmeticExpression(self, tree):
         """Build Arithmetic Expression"""

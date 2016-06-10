@@ -6,13 +6,13 @@ class IncludeStatement(Statement):
 
     def __init__(self, path):
         Statement.__init__(self)
-        self.path = path[1:-1]
+        self.path = path
 
     def __str__(self):
         return "IncludeStatement(" + self.path + ")"
 
     def compile(self):
-        return "TODO: Include\n"
+        return ""
 
     def serialize(self, level):
         return padding(level) + "IncludeStatement(" + self.path + ")\n"

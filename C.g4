@@ -62,6 +62,7 @@ expression
 : TRUE|FALSE|CHAR|NUM|REAL|STRING
 | variable ASSIGN expression
 | variable
+| basetype IDENTIFIER (COMMA IDENTIFIER)+ (ASSIGN expression)?
 | (MINUS|NOT|AMPERSAND|STAR) expression|variable
 | LPAREN expression RPAREN
 | expression (EQUAL|NOTEQUAL|GREATERTHAN|LESSTHAN|LESSTHANOREQUAL|GREATERTHANOREQUAL) expression

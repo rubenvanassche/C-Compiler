@@ -20,6 +20,7 @@ test:
 	python3 -m unittest discover
 
 testold:
+	python3 Compiler.py testfiles/ast/multivar.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/pointers.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/io.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/main.c -showast -o testoutput
@@ -40,20 +41,7 @@ testold:
 	python3 Compiler.py testfiles/ast/for.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/return.c -showast -o testoutput
 
-testsymbol:
-	python3 Compiler.py testfiles/Symboltable/test1.c
-	python3 Compiler.py testfiles/Symboltable/test2.c
-	python3 Compiler.py testfiles/Symboltable/test3.c
-	python3 Compiler.py testfiles/Symboltable/test4.c
-	python3 Compiler.py testfiles/Symboltable/test5.c
-	python3 Compiler.py testfiles/Symboltable/test6.c
-	python3 Compiler.py testfiles/Symboltable/test7.c
-	python3 Compiler.py testfiles/Symboltable/test8.c
-	python3 Compiler.py testfiles/Symboltable/test9.c
-	python3 Compiler.py testfiles/Symboltable/test10.c
-	python3 Compiler.py testfiles/Symboltable/test11.c
-	python3 Compiler.py testfiles/Symboltable/test12.c
-	python3 Compiler.py testfiles/Symboltable/test13.c
+
 
 testcrash:
 	python3 Compiler.py testfiles/Crashes/2io3.c -showast -o testoutput
