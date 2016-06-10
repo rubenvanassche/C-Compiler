@@ -33,7 +33,7 @@ class ForStatement(Statement):
             code += self.initExpression.compile()
 
         # Mark begin of loop
-        code = str(begin) + ":\n"
+        code += str(begin) + ":\n"
 
         # Check if check is an boolean Expression
         if(type(self.checkExpression.basetype) != type(BooleanType())):

@@ -60,6 +60,7 @@ statement
  */
 expression
 : TRUE|FALSE|CHAR|NUM|REAL|STRING
+| IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN
 | variable ASSIGN expression
 | variable
 | basetype IDENTIFIER (COMMA IDENTIFIER)+ (ASSIGN expression)?
@@ -71,7 +72,6 @@ expression
 | variable (PLUS PLUS|MINUS MINUS)
 | expression (STAR|SLASH) expression
 | expression (PLUS|MINUS) expression
-| IDENTIFIER LPAREN (expression (COMMA expression)*)? RPAREN
 ;
 
 variable

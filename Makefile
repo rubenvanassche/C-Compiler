@@ -43,6 +43,8 @@ testold:
 	python3 Compiler.py testfiles/AST/return.c -showast -o testoutput
 
 testcompiler:
+	python3 Compiler.py testfiles/Compiler/fibonacci.c -showast -o testoutput/Compiler
+	python3 Compiler.py testfiles/Compiler/conditional.c -showast -o testoutput/Compiler
 	python3 Compiler.py testfiles/Compiler/basic.c -showast -o testoutput/Compiler
 	python3 Compiler.py testfiles/Compiler/addpointer.c -showast -o testoutput/Compiler
 	python3 Compiler.py testfiles/Compiler/fact.c -showast -o testoutput/Compiler
