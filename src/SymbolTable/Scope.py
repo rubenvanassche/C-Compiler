@@ -60,6 +60,14 @@ class Scope:
 
         return False
 
+    def getFunctionByArguments(self, identifier, arguments):
+        """Returns function if the scope"""
+        for function in self.functions:
+            if function.identifier == identifier and arguments == function.arguments:
+                return function
+
+        return None
+
     def getSymbol(self, identifier):
         """Get the symbol in the scope"""
         for symbol in self.symbols:
@@ -84,6 +92,7 @@ class Scope:
                 return function
 
         return None
+
 
     def printer(self, level):
         output = padding(level) + "||SCOPE(" + str(self.allocated) + ")\n"

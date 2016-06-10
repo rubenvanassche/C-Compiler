@@ -41,13 +41,13 @@ class ConstantExpression(Expression):
             raise RuntimeError("Trying to create constantexpession with unkown type")
 
     def __str__(self):
-        out = padding(level) + "ConstantExpression\n"
-        out += self.basetype.serialize(level + 1)
-
-        return out
-
+        return "ConstantExpression"
+        
     def compile(self):
         return self.value.compile()
 
     def serialize(self, level):
-        return self.basetype.getPcode() + ": " + str(self.value)
+        out = padding(level) + "ConstantExpression\n"
+        out += self.basetype.serialize(level + 1)
+
+        return out

@@ -32,7 +32,7 @@ statement
 | BREAK SEMICOLON
 | CONTINUE SEMICOLON
 | INCLUDE (CPATH|STRING)
-| RETURN expression
+| RETURN (expression|VOID)?
 | expression SEMICOLON
 | LBRACE statement* RBRACE
 | WHILE LPAREN expression RPAREN statement
@@ -62,8 +62,6 @@ expression
 : TRUE|FALSE|CHAR|NUM|REAL|STRING
 | (MINUS|NOT|AMPERSAND|STAR) expression
 | LPAREN expression RPAREN
-| expression (STAR|SLASH) expression
-| expression (PLUS|MINUS) expression
 | expression (EQUAL|NOTEQUAL|GREATERTHAN|LESSTHAN|LESSTHANOREQUAL|GREATERTHANOREQUAL) expression
 | expression (AND|OR) expression
 | expression LSQUAREBRACKET expression RSQUAREBRACKET
@@ -71,6 +69,8 @@ expression
 | expression (LSQUAREBRACKET expression RSQUAREBRACKET)
 | variable (COMMA STAR* IDENTIFIER (LSQUAREBRACKET NUM RSQUAREBRACKET)*)* ((PLUS|MINUS)? ASSIGN expression)?
 | variable (PLUS PLUS|MINUS MINUS)
+| expression (STAR|SLASH) expression
+| expression (PLUS|MINUS) expression
 ;
 
 variable

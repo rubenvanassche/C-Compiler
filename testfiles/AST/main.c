@@ -1,7 +1,8 @@
-int add(int x, int y){
-  return x + y;
-}
+int main(){
+  int j = 0;
+  while(j < 10){
+    j = j + 1;
+  }
 
-void main(){
-  add(5, 6);
+  return j;
 }

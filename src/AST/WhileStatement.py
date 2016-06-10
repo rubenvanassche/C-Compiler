@@ -30,7 +30,7 @@ class WhileStatement(Statement):
         code = str(begin) + ":\n"
 
         # compile the expression to evaluate
-        code += self.expression.compile() + "fjp" + str(end) + "\n"
+        code += self.expression.compile() + "fjp " + str(end) + "\n"
 
         # compile the statement to execute
         code += self.statement.compile()

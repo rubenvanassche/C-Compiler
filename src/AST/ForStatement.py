@@ -40,6 +40,7 @@ class ForStatement(Statement):
             raise RuntimeError("Check condition in for loop should be of boolean type")
 
         # Compile check
+        code += self.checkExpression.compile()
         code += "fjp " + str(end) + "\n"
 
         # Compile the statement

@@ -13,7 +13,7 @@ class ArrayType(Type):
 
     def __eq__(self, other):
         if(not isinstance(other, ArrayType)):
-            return false
+            return False
         else:
             return (self.basetype == other.basetype and self.size == other.size)
 

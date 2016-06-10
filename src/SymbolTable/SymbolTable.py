@@ -65,6 +65,7 @@ class SymbolTable:
         """Close a scope for functions"""
         # Save the static data size to the function object
         function.staticsize = self.scope.getTotalAllocated()
+        print(function.staticsize)
 
         # Close scope
         if(self.scope.parentScope == None):
@@ -106,15 +107,25 @@ class SymbolTable:
 
         return alias
 
-    def registerFunction(self, identifier, returntype, arguments, staticsize):
-        """Register a Function in the current scope with an identifier(string), returntype(Type), arguments(ArgumentsList) and staticsize(int)"""
+    def registerFunction(self, identifier, returntype, arguments, implemented):
+        """Register a Function in the current scope with an identifier(string), returntype(Type), arguments(ArgumentsList) and implemented(bool)"""
         if(self.scope.isContainingFunction(identifier, arguments)):
-            raise FunctionAlreadyRegisteredError("Function '"+ identifier +"' already registered in scope")
+            function = self.scope.getFunctionByArguments(identifier, arguments)
+            if(function.implemented == False):
+                # Forward declaration already in symbol
+
+                # If this is an implementation, change function object
+                if(implemented == True):
+                    function.implemented = True
+
+                return function
+            else:
+                raise FunctionAlreadyRegisteredError("Function '"+ identifier +"' already registered in scope")
 
         #get a label
         label = self.createFunctionLabel(identifier)
 
-        function = Function(identifier, returntype, arguments, staticsize, label)
+        function = Function(identifier, returntype, arguments, implemented, label)
 
         self.scope.addFunction(function)
 

@@ -19,8 +19,8 @@ class FunctionCallExpression(Expression):
         code = "mst 0\n"
 
         # Load parameters
-        for parameter in self.parameters:
-            code += # TODO parameter compilation
+        for parameter in self.parameters.parameters:
+            code += parameter.expression.compile()
 
         code += "cup " + str(self.function.getParameterSize()) + " " + self.function.label + "\n"
 

@@ -27,7 +27,7 @@ class ArithmeticExpression(Expression):
         operations = {'+' : 'add', '-' : 'sub', '/' : 'div', '*' : 'mul'}
         code = self.leftExpression.compile()
         code += self.rightExpression.compile()
-        code += operations[self.operation] + self.basetype.getPcode() + "\n"
+        code += operations[self.operation] + " " + self.basetype.getPcode() + "\n"
 
         return code
 

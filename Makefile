@@ -36,6 +36,7 @@ testold:
 	python3 Compiler.py testfiles/ast/variables.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/while.c -showast -o testoutput
 	python3 Compiler.py testfiles/ast/for.c -showast -o testoutput
+	python3 Compiler.py testfiles/ast/return.c -showast -o testoutput
 
 testsymbol:
 	python3 Compiler.py testfiles/Symboltable/test1.c

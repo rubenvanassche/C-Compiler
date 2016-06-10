@@ -25,7 +25,7 @@ class CompoundStatement(Statement):
         for statement in self.statements:
             code += statement.compile()
 
-        return "ssp " + str(self.usedSpace) + "\n" + code + "ssp " +  str(self.sym.getAllocatedSpace()) + "\n"
+        return code
 
     def serialize(self, level):
         out = ""

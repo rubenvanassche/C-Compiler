@@ -42,6 +42,7 @@ from src.Type.BooleanType import BooleanType
 from src.Type.CharacterType import CharacterType
 from src.Type.IntegerType import IntegerType
 from src.Type.RealType import RealType
+from src.Type.VoidType import VoidType
 
 from src.Type.Parameter import Parameter
 from src.Type.Parameter import ParametersList
@@ -81,7 +82,7 @@ class ASTBuilder:
         return self.AST
 
     def serialize(self):
-        print(self.AST.serialize(0))
+        print(self.AST)
 
     def buildStatement(self, tree):
         """Build Statement"""
@@ -92,6 +93,9 @@ class ASTBuilder:
             token = tree.getChild(0).getPayload()
             if(isinstance(token, Token) and token.type == CLexer.SEMICOLON):
                 return Statement()
+
+            if(isinstance(token, Token) and token.type == CLexer.RETURN):
+                return ReturnStatement(VoidType())
 
             # Otherwise something went wrong
             raise RuntimeError("Invalid statement: '" + tree.getText() + "'")
@@ -169,7 +173,11 @@ class ASTBuilder:
         if(not isinstance(token, Token) or token.type != CLexer.RETURN):
             raise RuntimeError("Invalid compund statement: '" + tree.getText() + "'")
 
-        return ReturnStatement(self.buildExpression(tree.getChild(1)))
+        token = tree.getChild(1).getPayload();
+        if(isinstance(token, Token) and token.type == CLexer.VOID):
+            return ReturnStatement(VoidType())
+        else:
+            return ReturnStatement(self.buildExpression(tree.getChild(1)))
 
     def buildCompoundStatement(self, tree):
         """Build Compound Statement"""
@@ -212,6 +220,7 @@ class ASTBuilder:
         identifier = tree.getChild(1).getText()
         arguments = ArgumentsList()
         statements = []
+        implemented = True
 
         # check for LPAREN
         token = tree.getChild(2).getPayload()
@@ -256,9 +265,7 @@ class ASTBuilder:
         if(not isinstance(token, Token) or token.type != CLexer.RPAREN):
             raise RuntimeError("Invalid function statement: '" + tree.getText() + "'")
 
-        # Register function in symbol table and open scope
-        function = self.sym.registerFunction(identifier, returntype, arguments, 0)
-        self.sym.openFunctionScope(function)
+        function = None
 
         # Check if SEMICOLON(ready) or LBRACE(parse statements)
         childIndex += 1
@@ -268,8 +275,17 @@ class ASTBuilder:
         else:
             if(token.type == CLexer.SEMICOLON):
                 #ready
+                implemented = False
+                function = self.sym.registerFunction(identifier, returntype, arguments, implemented)
+                self.sym.openFunctionScope(function)
+                self.sym.closeFunctionScope(function)
                 pass
             elif(token.type == CLexer.LBRACE):
+                # Register function in symbol table and open scope
+                implemented = True
+                function = self.sym.registerFunction(identifier, returntype, arguments, implemented)
+                self.sym.openFunctionScope(function)
+
                 # Parse statements
                 childIndex += 1
                 while(True):
@@ -280,14 +296,14 @@ class ASTBuilder:
                     else:
                         statements.append(self.buildStatement(tree.getChild(childIndex)))
                         childIndex += 1
+                # close scope
+                self.sym.closeFunctionScope(function)
             else:
                 raise RuntimeError("Invalid function statement: '" + tree.getText() + "'")
 
 
-        # close scope
-        self.sym.closeFunctionScope(function)
 
-        return FunctionStatement(function, statements)
+        return FunctionStatement(function, statements, implemented)
 
     def buildTypeDefStatement(self, tree):
         """Build Typedef Statement"""
@@ -863,7 +879,7 @@ class ASTBuilder:
                 raise RuntimeError("Invalid type identifier: '" + tree.getText() + "'")
 
             if(token.type == CLexer.VOID):
-                return None
+                return VoidType()
             elif(token.type == CLexer.IDENTIFIER):
                 if(tree.getChild(0).getText() == "bool"):
                     return BooleanType()

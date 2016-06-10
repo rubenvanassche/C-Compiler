@@ -224,13 +224,13 @@ class TestUM(unittest.TestCase):
 
 
         # Register basic function, no arguments
-        st.registerFunction('hello', integer, ArgumentsList(), 0)
+        st.registerFunction('hello', integer, ArgumentsList(), True)
 
         # register function again, shouldn't work
-        self.assertRaises(FunctionAlreadyRegisteredError, lambda: st.registerFunction('hello', integer, ArgumentsList(), 0))
+        self.assertRaises(FunctionAlreadyRegisteredError, lambda: st.registerFunction('hello', integer, ArgumentsList(), True))
 
         # register function again with other return type, shouldn't work
-        self.assertRaises(FunctionAlreadyRegisteredError, lambda: st.registerFunction('hello', boolean, ArgumentsList(), 0))
+        self.assertRaises(FunctionAlreadyRegisteredError, lambda: st.registerFunction('hello', boolean, ArgumentsList(), True))
 
         # get basic function
         self.assertEqual(type(st.getFunction('hello', ParametersList())), Function)
@@ -260,13 +260,13 @@ class TestUM(unittest.TestCase):
         fakeParametersList.add(Parameter(ConstantExpression(1, 'int')))
 
         # Register basic function,  arguments
-        st.registerFunction('add', integer, argumentsList, 0)
+        st.registerFunction('add', integer, argumentsList, True)
 
         # register function again, shouldn't work
-        self.assertRaises(FunctionAlreadyRegisteredError, lambda: st.registerFunction('add', integer, argumentsList, 0))
+        self.assertRaises(FunctionAlreadyRegisteredError, lambda: st.registerFunction('add', integer, argumentsList, True))
 
         # register function again with other return type, shouldn't work
-        self.assertRaises(FunctionAlreadyRegisteredError, lambda: st.registerFunction('add', boolean, argumentsList, 0))
+        self.assertRaises(FunctionAlreadyRegisteredError, lambda: st.registerFunction('add', boolean, argumentsList, True))
 
         # get basic function
         self.assertEqual(type(st.getFunction('add', parametersList)), Function)
@@ -298,7 +298,7 @@ class TestUM(unittest.TestCase):
         parametersList.add(Parameter(ConstantExpression(3.14, 'float')))
 
         # Register basic function, no arguments
-        st.registerFunction('add', integer, argumentsList, 0)
+        st.registerFunction('add', integer, argumentsList, True)
 
         # Call function in main scope
         self.assertEqual(type(st.getFunction('add', parametersList)), Function)
@@ -308,7 +308,7 @@ class TestUM(unittest.TestCase):
         self.assertEqual(type(st.getFunction('add', parametersList)), Function)
 
         # register function in scope
-        st.registerFunction('divide', integer, argumentsList, 0)
+        st.registerFunction('divide', integer, argumentsList, True)
 
         # call new function in scope
         self.assertEqual(type(st.getFunction('add', parametersList)), Function)
@@ -319,13 +319,13 @@ class TestUM(unittest.TestCase):
 
         # open scope and register add again
         st.openScope()
-        st.registerFunction('add', integer, argumentsList, 0)
+        st.registerFunction('add', integer, argumentsList, True)
         self.assertEqual(type(st.getFunction('add', parametersList)), Function)
-        self.assertRaises(FunctionAlreadyRegisteredError, lambda:st.registerFunction('add', integer, argumentsList, 0) )
+        self.assertRaises(FunctionAlreadyRegisteredError, lambda:st.registerFunction('add', integer, argumentsList, True) )
         st.closeScope()
 
         # register function in higher scope and call in lower scope
-        st.registerFunction('multiply', integer, argumentsList, 0)
+        st.registerFunction('multiply', integer, argumentsList, True)
         st.openScope()
         self.assertEqual(type(st.getFunction('multiply', parametersList)), Function)
         self.assertRaises(FunctionNotRegisteredError, lambda:st.getFunction('multiplynotexisting', parametersList) )
@@ -349,14 +349,14 @@ class TestUM(unittest.TestCase):
         parametersList.add(Parameter(ConstantExpression(3.14, 'float')))
 
         # Register basic function, no arguments
-        st.registerFunction('add', integer, argumentsList, 0)
+        st.registerFunction('add', integer, argumentsList, True)
 
         # Check for label
         self.assertEqual(st.getFunction('add', parametersList).label, 'add0')
 
         # Check for label in scope
         st.openScope()
-        st.registerFunction('add', integer, argumentsList, 0)
+        st.registerFunction('add', integer, argumentsList, True)
         self.assertEqual(st.getFunction('add', parametersList).label, 'add1')
         st.closeScope()
 
@@ -379,7 +379,7 @@ class TestUM(unittest.TestCase):
         parametersList.add(Parameter(VariableCallExpression(st.getSymbol('b'), 1)))
 
         # Register basic function, no arguments
-        st.registerFunction('add', integer, argumentsList, 0)
+        st.registerFunction('add', integer, argumentsList, True)
         function = st.getFunction('add', parametersList)
 
         self.assertEqual(function.getParameterSize(), 2)
@@ -403,7 +403,7 @@ class TestUM(unittest.TestCase):
         parametersList.add(Parameter(VariableCallExpression(st.getSymbol('b'), None)))
 
         # Register basic function, no arguments
-        st.registerFunction('add', integer, argumentsList, 0)
+        st.registerFunction('add', integer, argumentsList, True)
         function = st.getFunction('add', parametersList)
 
         self.assertEqual(function.getParameterSize(), 4)
@@ -452,7 +452,7 @@ class TestUM(unittest.TestCase):
         parametersList.add(Parameter(ConstantExpression(1, 'int')))
         parametersList.add(Parameter(VariableCallExpression(Symbol('b', arrayinteger, 0), None)))
 
-        st.registerFunction('main', integer, argumentsList, 0)
+        st.registerFunction('main', integer, argumentsList, True)
         function = st.getFunction('main', parametersList)
 
         st.openFunctionScope(function)
@@ -467,7 +467,7 @@ class TestUM(unittest.TestCase):
         st.closeFunctionScope(function)
 
 
-        self.assertEqual(function.getStaticSize(), 10)
+        self.assertEqual(function.getStaticSize(), 14)
         self.assertEqual(function.getParameterSize(), 4)
 
 

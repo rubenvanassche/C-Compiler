@@ -26,7 +26,7 @@ class ComparisonExpression(Expression):
         operations = {'==' : 'equ', '!=' : 'neq', '>' : 'grt', '<' : 'les', '>=' : 'geq', '<=' : 'leq'}
         code = self.leftExpression.compile()
         code += self.rightExpression.compile()
-        code += operations[self.operation] + self.basetype.getPcode() + "\n"
+        code += operations[self.operation] + " " + self.leftExpression.basetype.getPcode() + "\n"
 
         return code
 

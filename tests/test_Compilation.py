@@ -24,7 +24,7 @@ class TestUM(unittest.TestCase):
 
     def test_compile_function_statement_no_arguments_no_statements(self):
         function = Function('main', IntegerType(), ArgumentsList(), 0, "main0")
-        statement = FunctionStatement(function, [])
+        statement = FunctionStatement(function, [], True)
 
         self.assertEqual(function.getStaticSize(), 5)
         self.assertEqual(function.getParameterSize(), 0)
@@ -46,18 +46,18 @@ class TestUM(unittest.TestCase):
         parametersList.add(Parameter(ConstantExpression(1, 'int')))
         parametersList.add(Parameter(VariableCallExpression(Symbol('b', arrayinteger, 0), None)))
 
-        st.registerFunction('main', integer, argumentsList, 0)
+        st.registerFunction('main', integer, argumentsList, True)
         function = st.getFunction('main', parametersList)
         st.openFunctionScope(function)
 
         st.closeFunctionScope(function)
 
 
-        statement = FunctionStatement(function, [])
+        statement = FunctionStatement(function, [], True)
 
-        self.assertEqual(function.getStaticSize(), 5)
+        self.assertEqual(function.getStaticSize(), 9)
         self.assertEqual(function.getParameterSize(), 4)
-        self.assertEqual(statement.compile(), "main0:\nssp 5\nretp\n")
+        self.assertEqual(statement.compile(), "main0:\nssp 9\nretp\n")
 
     def test_compile_function_no_arguments_statements(self):
         st = SymbolTable()
@@ -71,7 +71,7 @@ class TestUM(unittest.TestCase):
         # Create parameters
         parametersList = ParametersList()
 
-        st.registerFunction('main', integer, argumentsList, 0)
+        st.registerFunction('main', integer, argumentsList, True)
         function = st.getFunction('main', parametersList)
         st.openFunctionScope(function)
 
@@ -79,7 +79,7 @@ class TestUM(unittest.TestCase):
         st.closeFunctionScope(function)
 
 
-        statement = FunctionStatement(function, [])
+        statement = FunctionStatement(function, [], True)
 
         self.assertEqual(function.getStaticSize(), 5)
         self.assertEqual(function.getParameterSize(), 0)
