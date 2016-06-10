@@ -8,7 +8,7 @@ class IntegerType(PrimitiveType):
 
     def __str__(self):
         out = ""
-        if(self.isConst):
+        if(self.isConst()):
             out += "const "
         return out + "int"
 

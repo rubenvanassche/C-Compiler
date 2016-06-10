@@ -60,13 +60,13 @@ statement
  */
 expression
 : TRUE|FALSE|CHAR|NUM|REAL|STRING
+| variable ASSIGN expression
+| variable
 | (MINUS|NOT|AMPERSAND|STAR) expression|variable
 | LPAREN expression RPAREN
 | expression (EQUAL|NOTEQUAL|GREATERTHAN|LESSTHAN|LESSTHANOREQUAL|GREATERTHANOREQUAL) expression
 | expression (AND|OR) expression
 | expression LSQUAREBRACKET expression RSQUAREBRACKET
-| expression (LSQUAREBRACKET expression RSQUAREBRACKET)
-| variable ((PLUS|MINUS)? ASSIGN expression)?
 | variable (PLUS PLUS|MINUS MINUS)
 | expression (STAR|SLASH) expression
 | expression (PLUS|MINUS) expression
@@ -75,7 +75,7 @@ expression
 
 variable
 : IDENTIFIER
-| basetype IDENTIFIER
+| basetype (STAR)? IDENTIFIER
 | variable LSQUAREBRACKET expression RSQUAREBRACKET
 ;
 
